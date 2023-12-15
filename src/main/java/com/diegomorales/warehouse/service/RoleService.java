@@ -7,8 +7,7 @@ import com.diegomorales.warehouse.exception.GenericException;
 import com.diegomorales.warehouse.exception.NoContentException;
 import com.diegomorales.warehouse.repository.RoleRepository;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -19,10 +18,10 @@ import java.util.*;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class RoleService {
 
     private final RoleRepository repository;
-    private static final Logger logger = LoggerFactory.getLogger(RoleService.class);
 
     public Role save(RoleDTO dto) throws GenericException, BadRequestException{
         try {
@@ -37,7 +36,7 @@ public class RoleService {
         }catch (BadRequestException e){
             throw e;
         }catch (Exception e){
-            logger.error("Processing error", e);
+            log.error("Processing error", e);
             throw new GenericException("Error processing request");
         }
     }
@@ -54,7 +53,7 @@ public class RoleService {
         }catch (BadRequestException e){
             throw e;
         }catch (Exception e){
-            logger.error("Processing error", e);
+            log.error("Processing error", e);
             throw new GenericException("Error processing request");
         }
     }
@@ -78,7 +77,7 @@ public class RoleService {
         }catch(BadRequestException e){
             throw e;
         }catch (Exception e){
-            logger.error("Processing error", e);
+            log.error("Processing error", e);
             throw new GenericException("Error processing request");
         }
     }
@@ -95,7 +94,7 @@ public class RoleService {
         }catch (BadRequestException e){
             throw e;
         } catch (Exception e){
-            logger.error("Processing error", e);
+            log.error("Processing error", e);
             throw new GenericException("Error processing request");
         }
     }
@@ -115,7 +114,7 @@ public class RoleService {
         }catch (NoContentException e){
             throw e;
         }catch (Exception e){
-            logger.error("Processing error", e);
+            log.error("Processing error", e);
             throw new GenericException("Error processing request");
         }
     }

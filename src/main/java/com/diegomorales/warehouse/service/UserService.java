@@ -5,8 +5,7 @@ import com.diegomorales.warehouse.dto.UserDTO;
 import com.diegomorales.warehouse.exception.*;
 import com.diegomorales.warehouse.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,9 +18,9 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class UserService {
     private final UserRepository repository;
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private final RoleService roleService;
     private final UserRoleService userRoleService;
 
@@ -39,7 +38,7 @@ public class UserService {
         }catch (BadRequestException e){
             throw e;
         }catch (Exception e){
-            logger.error("Processing error", e);
+            log.error("Processing error", e);
             throw new GenericException("Error processing request");
         }
     }
@@ -64,7 +63,7 @@ public class UserService {
         }catch (BadRequestException e){
             throw e;
         }catch (Exception e){
-            logger.error("Processing error", e);
+            log.error("Processing error", e);
             throw new GenericException("Error processing request");
         }
     }
@@ -88,7 +87,7 @@ public class UserService {
         }catch (BadRequestException e){
             throw e;
         }catch (Exception e){
-            logger.error("Processing error", e);
+            log.error("Processing error", e);
             throw new GenericException("Error processing request");
         }
     }
@@ -113,7 +112,7 @@ public class UserService {
         }catch (BadRequestException e){
             throw e;
         }catch (Exception e){
-            logger.error("Processing error", e);
+            log.error("Processing error", e);
             throw new GenericException("Error processing request");
         }
     }
@@ -132,7 +131,7 @@ public class UserService {
         }catch (BadRequestException e){
             throw e;
         }catch (Exception e){
-            logger.error("Processing error", e);
+            log.error("Processing error", e);
             throw new GenericException("Error processing request");
         }
     }
@@ -153,7 +152,7 @@ public class UserService {
         }catch (NoContentException e){
             throw e;
         }catch (Exception e){
-            logger.error("Processing error", e);
+            log.error("Processing error", e);
             throw new GenericException("Error processing request");
         }
     }
@@ -231,7 +230,7 @@ public class UserService {
                 this.userRoleService.addAllRolesByName(id, newRoles);
             }
         }catch (Exception e){
-            logger.error("Processing error", e);
+            log.error("Processing error", e);
             throw new GenericException("Error processing request");
         }
 

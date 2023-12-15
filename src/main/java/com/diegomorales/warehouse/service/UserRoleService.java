@@ -8,8 +8,7 @@ import com.diegomorales.warehouse.exception.GenericException;
 import com.diegomorales.warehouse.repository.RoleRepository;
 import com.diegomorales.warehouse.repository.UserRoleRepository;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,10 +18,10 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class UserRoleService {
     private final UserRoleRepository userRoleRepository;
     private final RoleRepository roleRepository;
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     public void save(Integer id_user, String nameRole) throws GenericException, BadRequestException {
         try {
@@ -37,7 +36,7 @@ public class UserRoleService {
             this.userRoleRepository.save(entity);
 
         } catch (Exception e) {
-            logger.error("Processing error", e);
+            log.error("Processing error", e);
             throw new GenericException("Error processing request");
         }
     }
@@ -51,7 +50,7 @@ public class UserRoleService {
             List<UserRole> findRoles = this.userRoleRepository.findByUserId(id_user);
             this.userRoleRepository.deleteAll(findRoles);
         }catch (Exception e){
-            logger.error("Processing error", e);
+            log.error("Processing error", e);
             throw new GenericException("Error processing request");
         }
     }
@@ -83,7 +82,7 @@ public class UserRoleService {
 
             return roles;
         } catch (Exception e) {
-            logger.error("Processing error", e);
+            log.error("Processing error", e);
             throw new GenericException("Error processing request");
         }
 
