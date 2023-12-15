@@ -36,7 +36,6 @@ public class UserDetailsImplService implements UserDetailsService {
 
         try {
              roles = this.userRoleService.findAllRolesByUser(userDomain.getId());
-             log.info("Roles: " + roles);
 
         } catch (GenericException e) {
             throw new RuntimeException(e);

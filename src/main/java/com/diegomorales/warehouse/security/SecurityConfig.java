@@ -1,5 +1,7 @@
 package com.diegomorales.warehouse.security;
 
+import com.diegomorales.warehouse.exception.BadRequestException;
+import com.diegomorales.warehouse.exception.GenericException;
 import com.diegomorales.warehouse.security.filters.JwtAuthenticationFilter;
 import com.diegomorales.warehouse.security.filters.JwtAuthorizationFilter;
 import com.diegomorales.warehouse.security.jwt.JwtUtils;
@@ -32,7 +34,7 @@ public class SecurityConfig {
     JwtAuthorizationFilter authorizationFilter;
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, AuthenticationManager authenticationManager) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, AuthenticationManager authenticationManager) throws Exception, BadRequestException, GenericException {
 
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtUtils);
         jwtAuthenticationFilter.setAuthenticationManager(authenticationManager);

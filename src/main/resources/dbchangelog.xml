@@ -161,7 +161,7 @@
         <insert tableName="users">
             <column name="username" value="ADMIN"/>
             <column name="email" value="admin@gmail.com"/>
-            <column name="password" value="$2a$10$NvfmX5MxAv3EVqyH4ataUuDHzmatYwRVzF2oQxsYlj.Ro7smTcqD2"/>
+            <column name="password" value="$2a$10$rNJl8iQlMYiMR4LomKmlQeTTBilQULC46tbQNd4f4L778MWw9s8km"/>
         </insert>
         <insert tableName="roles">
             <column name="name" value="ADMIN"/>

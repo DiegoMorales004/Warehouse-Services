@@ -1,5 +1,6 @@
 package com.diegomorales.warehouse.security.filters;
 
+import com.diegomorales.warehouse.exception.GenericException;
 import com.diegomorales.warehouse.security.jwt.JwtUtils;
 import com.diegomorales.warehouse.service.UserDetailsImplService;
 import jakarta.servlet.FilterChain;

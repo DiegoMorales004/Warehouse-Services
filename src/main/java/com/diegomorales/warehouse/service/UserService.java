@@ -158,8 +158,6 @@ public class UserService {
         }
     }
 
-
-    //Repeated process in two functions
     private void VerifyUserName_Roles(UserDTO dto) throws BadRequestException {
         Optional<UserDomain> validUserName = this.repository.findFirstByUsernameContainsIgnoreCase(dto.getUsername());
         if (validUserName.isPresent()) {
@@ -172,6 +170,10 @@ public class UserService {
         }
     }
 
+    /**
+     * Repeated process in the saveWithDefaultRole and save function
+     * @param dto DTO to save
+     */
     private UserDomain savingProcess(UserDTO dto){
         var entity = new UserDomain();
         BeanUtils.copyProperties(dto, entity);

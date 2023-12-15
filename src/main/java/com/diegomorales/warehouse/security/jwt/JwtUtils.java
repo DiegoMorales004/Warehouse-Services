@@ -1,5 +1,6 @@
 package com.diegomorales.warehouse.security.jwt;
 
+import com.diegomorales.warehouse.exception.GenericException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -24,8 +25,7 @@ public class JwtUtils {
     private String timeExpiration;
 
 
-    // Generar token de acceso
-    public String generateAccesToken(String username){
+    public String generateAccessToken(String username){
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -34,7 +34,6 @@ public class JwtUtils {
                 .compact();
     }
 
-    // Validar el token de acceso
     public boolean isTokenValid(String token){
         try{
             Jwts.parserBuilder()
@@ -44,23 +43,20 @@ public class JwtUtils {
                     .getBody();
             return true;
         }catch (Exception e){
-            log.error("Token invalido, error: ".concat(e.getMessage()));
+            log.error("Invalid token, error: ".concat(e.getMessage()));
             return false;
         }
     }
 
-    // Obtener el username del token
     public String getUsernameFromToken(String token){
         return getClaim(token, Claims::getSubject);
     }
 
-    // Obtener un solo claim
     public <T> T getClaim(String token, Function<Claims, T> claimsTFunction){
         Claims claims = extractAllClaims(token);
         return claimsTFunction.apply(claims);
     }
 
-    // Obtener todos los claims del token
     public Claims extractAllClaims(String token){
         return Jwts.parserBuilder()
                 .setSigningKey(getSignatureKey())
@@ -69,7 +65,6 @@ public class JwtUtils {
                 .getBody();
     }
 
-    // Obtener firma del token
     public Key getSignatureKey(){
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
