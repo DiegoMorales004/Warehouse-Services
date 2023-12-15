@@ -39,19 +39,19 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> findOne(@PathParam("id") Integer id) throws GenericException, BadRequestException {
+    public ResponseEntity<Object> findOne(@PathVariable("id") Integer id) throws GenericException, BadRequestException {
         var response = this.service.findOne(id);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathParam("id") Integer id, @RequestBody UserDTO dto) throws GenericException, BadRequestException {
+    public ResponseEntity<Void> update(@PathVariable("id") Integer id, @RequestBody UserDTO dto) throws GenericException, BadRequestException {
         this.service.update(id, dto);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> delete(@PathParam("id") Integer id) throws GenericException, BadRequestException {
+    public ResponseEntity<Object> delete(@PathVariable("id") Integer id) throws GenericException, BadRequestException {
         var response = this.service.delete(id);
         return ResponseEntity.ok(response);
     }

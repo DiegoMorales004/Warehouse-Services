@@ -40,4 +40,22 @@ public class ServiceDomainService {
         }
     }
 
+    public ServiceDTO findOne(Integer id) throws BadRequestException, GenericException{
+        try {
+
+            Optional<ServiceDomain> valid = this.serviceDomainRepository.findById(id);
+            if (valid.isEmpty()) {
+                throw new BadRequestException("The service does not exist");
+            }
+            var dto = new ServiceDTO();
+            BeanUtils.copyProperties(valid.get(), dto);
+            return dto;
+        }catch (BadRequestException e){
+            throw e;
+        } catch (Exception e) {
+            log.error("Processing error", e);
+            throw new GenericException("Error processing request");
+        }
+    }
+
 }

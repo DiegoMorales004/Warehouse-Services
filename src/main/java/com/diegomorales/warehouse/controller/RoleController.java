@@ -6,7 +6,6 @@ import com.diegomorales.warehouse.exception.BadRequestException;
 import com.diegomorales.warehouse.exception.GenericException;
 import com.diegomorales.warehouse.exception.NoContentException;
 import com.diegomorales.warehouse.service.RoleService;
-import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -28,19 +27,19 @@ public class RoleController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> findOne(@PathParam("id") Integer id) throws GenericException, BadRequestException{
+    public ResponseEntity<Object> findOne(@PathVariable("id") Integer id) throws GenericException, BadRequestException{
         var response = this.service.findOne(id);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@PathParam("id") Integer id, @RequestBody RoleDTO dto) throws GenericException, BadRequestException{
+    public ResponseEntity<Object> update(@PathVariable("id") Integer id, @RequestBody RoleDTO dto) throws GenericException, BadRequestException{
         var response = this.service.update(id, dto);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathParam("id") Integer id) throws GenericException, BadRequestException, DataIntegrityViolationException {
+    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) throws GenericException, BadRequestException, DataIntegrityViolationException {
         this.service.delete(id);
         return ResponseEntity.ok().build();
     }

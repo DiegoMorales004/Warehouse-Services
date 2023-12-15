@@ -8,10 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/api/service")
@@ -24,6 +21,12 @@ public class ServiceController {
     @PostMapping
     public ResponseEntity<Object> save(@RequestBody ServiceDTO dto) throws GenericException, BadRequestException{
         var response = this.service.save(dto);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> findOne(@PathVariable Integer id) throws GenericException, BadRequestException{
+        var response = this.service.findOne(id);
         return ResponseEntity.ok(response);
     }
 
