@@ -57,7 +57,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<UserDomain>> findAll(@RequestParam(value = "search", required = false) String search, Pageable page) throws GenericException, NoContentException {
+    public ResponseEntity<Page<UserDTO>> findAll(@RequestParam(value = "search", required = false) String search, Pageable page) throws GenericException, NoContentException {
         var response = this.service.findAll(search, page);
         return ResponseEntity.ok(response);
     }

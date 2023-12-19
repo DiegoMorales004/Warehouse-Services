@@ -8,13 +8,12 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -136,7 +135,7 @@ public class UserService {
         }
     }
 
-    public Page<UserDomain> findAll(String search, Pageable page) throws GenericException, NoContentException{
+    public Page<UserDTO> findAll(String search, Pageable page) throws GenericException, NoContentException{
         try {
             Page<UserDomain> response;
             if (search != null && !search.isEmpty()) {
@@ -148,7 +147,23 @@ public class UserService {
                 throw new NoContentException("No records found");
             }
 
-            return response;
+            List<UserDTO> usersWithRoles = new ArrayList<>(Collections.emptyList());
+            response.forEach(
+                    user -> {
+                        UserDTO dto = new UserDTO();
+                        BeanUtils.copyProperties(user, dto);
+                        try {
+                            dto.setRoles(this.userRoleService.findAllRolesByUser(user.getId()));
+                        } catch (GenericException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        usersWithRoles.add(dto);
+                    }
+            );
+
+            return new PageImpl<>(usersWithRoles);
+
         }catch (NoContentException e){
             throw e;
         }catch (Exception e){
