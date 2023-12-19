@@ -5,21 +5,23 @@ import com.diegomorales.warehouse.dto.ServiceDTO;
 import com.diegomorales.warehouse.exception.BadRequestException;
 import com.diegomorales.warehouse.exception.GenericException;
 import com.diegomorales.warehouse.repository.ServiceRepository;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class ServiceDomainService {
 
-    @Autowired
     private ServiceRepository serviceDomainRepository;
 
-    public ServiceDomain save(ServiceDTO dto) throws GenericException, BadRequestException{
+    public ServiceDomain save(ServiceDTO dto) throws GenericException, BadRequestException, DataIntegrityViolationException{
         try {
             Optional<ServiceDomain> valid = this.serviceDomainRepository.findFirstByNameContainsIgnoreCase(dto.getName());
             if (valid.isPresent()) {
@@ -34,6 +36,8 @@ public class ServiceDomainService {
 
         }catch (BadRequestException e){
             throw e;
+        }catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityViolationException("Violation error in foreign key");
         } catch (Exception e) {
             log.error("Processing error", e);
             throw new GenericException("Error processing request");
@@ -57,5 +61,48 @@ public class ServiceDomainService {
             throw new GenericException("Error processing request");
         }
     }
+
+    public ServiceDomain update(Integer id, ServiceDTO dto) throws GenericException, BadRequestException{
+        try {
+            Optional<ServiceDomain> valid = this.serviceDomainRepository.findById(id);
+            if(valid.isEmpty()){
+                throw new BadRequestException("The service does not exists");
+            }
+
+            Optional<ServiceDomain> validName = this.serviceDomainRepository.findFirstByNameContainsIgnoreCase(dto.getName());
+            if (validName.isPresent() && !Objects.equals(validName.get().getId(), id)) {
+                throw new BadRequestException("The name of the new service is already in use");
+            }
+
+            BeanUtils.copyProperties(dto, valid.get(), "id");
+            return this.serviceDomainRepository.save(valid.get());
+
+        }catch (BadRequestException e){
+            throw e;
+        } catch (Exception e) {
+            log.error("Processing error", e);
+            throw new GenericException("Error processing request");
+        }
+    }
+
+    public ServiceDomain delete(Integer id) throws BadRequestException, GenericException{
+        try {
+            Optional<ServiceDomain> valid = this.serviceDomainRepository.findById(id);
+            if (valid.isEmpty()) {
+                throw new BadRequestException("The service does not exits");
+            }
+
+            this.serviceDomainRepository.delete(valid.get());
+
+            return valid.get();
+
+        }catch (BadRequestException e){
+            throw e;
+        } catch (Exception e) {
+            log.error("Processing error", e);
+            throw new GenericException("Error processing request");
+        }
+    }
+
 
 }

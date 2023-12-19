@@ -5,6 +5,7 @@ import com.diegomorales.warehouse.exception.BadRequestException;
 import com.diegomorales.warehouse.exception.GenericException;
 import com.diegomorales.warehouse.service.ServiceDomainService;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,6 +28,18 @@ public class ServiceController {
     @GetMapping("/{id}")
     public ResponseEntity<Object> findOne(@PathVariable Integer id) throws GenericException, BadRequestException{
         var response = this.service.findOne(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> update(@PathVariable Integer id, @RequestBody ServiceDTO dto) throws GenericException, BadRequestException{
+        var response = this.service.update(id, dto);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> delete(@PathVariable Integer id) throws GenericException, BadRequestException, DataIntegrityViolationException {
+        var response = this.service.delete(id);
         return ResponseEntity.ok(response);
     }
 
