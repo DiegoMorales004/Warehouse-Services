@@ -1,11 +1,15 @@
 package com.diegomorales.warehouse.controller;
 
+import com.diegomorales.warehouse.domain.ServiceDomain;
 import com.diegomorales.warehouse.dto.ServiceDTO;
 import com.diegomorales.warehouse.exception.BadRequestException;
 import com.diegomorales.warehouse.exception.GenericException;
+import com.diegomorales.warehouse.exception.NoContentException;
 import com.diegomorales.warehouse.service.ServiceDomainService;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,6 +44,12 @@ public class ServiceController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> delete(@PathVariable Integer id) throws GenericException, BadRequestException, DataIntegrityViolationException {
         var response = this.service.delete(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<ServiceDomain>> findAll(Pageable page, @RequestParam(value = "search", required = false) String search) throws NoContentException, GenericException{
+        var response = this.service.findAll(search, page);
         return ResponseEntity.ok(response);
     }
 

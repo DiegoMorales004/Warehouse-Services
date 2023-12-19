@@ -4,11 +4,14 @@ import com.diegomorales.warehouse.domain.ServiceDomain;
 import com.diegomorales.warehouse.dto.ServiceDTO;
 import com.diegomorales.warehouse.exception.BadRequestException;
 import com.diegomorales.warehouse.exception.GenericException;
+import com.diegomorales.warehouse.exception.NoContentException;
 import com.diegomorales.warehouse.repository.ServiceRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -99,6 +102,28 @@ public class ServiceDomainService {
         }catch (BadRequestException e){
             throw e;
         } catch (Exception e) {
+            log.error("Processing error", e);
+            throw new GenericException("Error processing request");
+        }
+    }
+
+    public Page<ServiceDomain> findAll(String search, Pageable page) throws NoContentException, GenericException{
+        try {
+            Page<ServiceDomain> response;
+
+            if(search != null && search.isEmpty()){
+                response = this.serviceDomainRepository.findAllByNameNotContainsIgnoreCase(search, page);
+            }else {
+                response = this.serviceDomainRepository.findAll(page);
+            }
+            if(response.isEmpty()){
+                throw new NoContentException("No services found");
+            }
+            return response;
+
+        }catch (NoContentException e){
+            throw e;
+        }catch (Exception e){
             log.error("Processing error", e);
             throw new GenericException("Error processing request");
         }
