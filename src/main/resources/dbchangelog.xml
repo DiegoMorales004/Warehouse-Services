@@ -182,4 +182,7 @@
             <column name="description" value="USER role"/>
         </insert>
     </changeSet>
+    <changeSet id="4" author="DiegoChMs">
+        <dropColumn tableName="warehouses" columnName="id_user"/>
+    </changeSet>
 </databaseChangeLog>
