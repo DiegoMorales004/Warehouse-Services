@@ -1,23 +1,18 @@
-package com.diegomorales.warehouse.domain;
+package com.diegomorales.warehouse.dto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Entity(name = "warehouses")
+import java.io.Serializable;
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Warehouse {
-
-    static final String SEQ_NAME = "SEQ_WAREHOUSES";
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQ_NAME)
-    @SequenceGenerator(name = SEQ_NAME, sequenceName = SEQ_NAME, allocationSize = 1)
+public class WarehouseDTO implements Serializable {
     private Integer id;
     private String code;
     private String description;
@@ -25,4 +20,5 @@ public class Warehouse {
     private String size;
     private Double price;
     private Integer id_branch;
+    private List<String> services;
 }

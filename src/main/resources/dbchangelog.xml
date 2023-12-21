@@ -185,4 +185,20 @@
     <changeSet id="4" author="DiegoChMs">
         <dropColumn tableName="warehouses" columnName="id_user"/>
     </changeSet>
+
+    <changeSet id="5" author="DiegoChMsd">
+        <addColumn tableName="warehouses">
+            <column name="id_user" type="INTEGER"/>
+        </addColumn>
+
+        <addForeignKeyConstraint
+                baseTableName="warehouses"
+                baseColumnNames="id_user"
+                constraintName="fk_warehouses_users"
+                referencedTableName="users"
+                referencedColumnNames="id"
+        />
+
+    </changeSet>
+
 </databaseChangeLog>
