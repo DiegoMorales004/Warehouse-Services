@@ -1,12 +1,14 @@
 package com.diegomorales.warehouse.service;
 
 import com.diegomorales.warehouse.domain.Branch;
+import com.diegomorales.warehouse.domain.ServiceWarehouse;
 import com.diegomorales.warehouse.domain.UserDomain;
 import com.diegomorales.warehouse.domain.Warehouse;
 import com.diegomorales.warehouse.dto.WarehouseDTO;
 import com.diegomorales.warehouse.exception.BadRequestException;
 import com.diegomorales.warehouse.exception.GenericException;
 import com.diegomorales.warehouse.repository.BranchRepository;
+import com.diegomorales.warehouse.repository.ServiceWarehouseRepository;
 import com.diegomorales.warehouse.repository.UserRepository;
 import com.diegomorales.warehouse.repository.WarehouseRepository;
 import lombok.AllArgsConstructor;
@@ -14,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,6 +27,8 @@ public class WarehouseService {
     private WarehouseRepository repository;
     private BranchRepository branchRepository;
     private UserRepository userRepository;
+    private ServiceWarehouseRepository serviceWarehouseRepository;
+
     private ServiceWarehouseService serviceWarehouseService;
 
     public Warehouse save(WarehouseDTO dto) throws GenericException, BadRequestException{
@@ -51,6 +56,37 @@ public class WarehouseService {
             }
 
             return saved;
+
+        }catch (BadRequestException e){
+            throw e;
+        } catch (Exception e) {
+            log.error("Processing error", e);
+            throw new GenericException("Error processing request");
+        }
+    }
+
+    public WarehouseDTO findOne(Integer id) throws GenericException, BadRequestException{
+        try {
+
+            Optional<Warehouse> valid = this.repository.findById(id);
+            if(valid.isEmpty()){
+                throw new BadRequestException("The warehouse does not exist");
+            }
+
+            List<ServiceWarehouse> extraServices = this.serviceWarehouseRepository.findAllByWarehouseId(id);
+
+            List<Integer> extraServicesIds = extraServices.stream().map(
+                    ExSer ->
+                         ExSer.getServiceWarehouseId().getId_service()
+            ).toList();
+
+            var dto = new WarehouseDTO();
+            BeanUtils.copyProperties(valid.get(), dto);
+
+            dto.setExtraServices(extraServicesIds);
+
+            return dto;
+
 
         }catch (BadRequestException e){
             throw e;
