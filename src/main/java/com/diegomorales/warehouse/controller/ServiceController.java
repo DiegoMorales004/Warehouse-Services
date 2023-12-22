@@ -43,8 +43,8 @@ public class ServiceController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> delete(@PathVariable Integer id) throws GenericException, BadRequestException, DataIntegrityViolationException {
-        var response = this.service.delete(id);
-        return ResponseEntity.ok(response);
+        this.service.delete(id);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping

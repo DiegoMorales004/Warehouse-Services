@@ -28,4 +28,10 @@ public class WarehouseController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) throws GenericException, BadRequestException{
+        this.service.delete(id);
+        return ResponseEntity.ok().build();
+    }
+
 }

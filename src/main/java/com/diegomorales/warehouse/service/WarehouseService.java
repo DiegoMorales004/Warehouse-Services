@@ -96,12 +96,34 @@ public class WarehouseService {
         }
     }
 
-    private void checkUserExistence(Integer id) throws BadRequestException{
-        if(id != null){
-            Optional<UserDomain> validUser = this.userRepository.findById(id);
-            if(validUser.isEmpty()){
-                throw new BadRequestException("The user does not exit");
+    public void delete(Integer id) throws BadRequestException, GenericException{
+        try {
+
+            Optional<Warehouse> valid = this.repository.findById(id);
+            if(valid.isEmpty()){
+                throw new BadRequestException("The warehouse does not exist");
             }
+
+            this.repository.delete(valid.get());
+
+        }catch (BadRequestException e){
+            throw e;
+        } catch (Exception e) {
+            log.error("Processing error", e);
+            throw new GenericException("Error processing request");
+        }
+    }
+
+    private void checkUserExistence(Integer id) throws BadRequestException{
+        try {
+            if(id != null){
+                Optional<UserDomain> validUser = this.userRepository.findById(id);
+                if(validUser.isEmpty()){
+                    throw new BadRequestException("The user does not exit");
+                }
+            }
+        } catch (BadRequestException e) {
+            throw e;
         }
     }
 

@@ -88,7 +88,7 @@ public class ServiceDomainService {
         }
     }
 
-    public ServiceDomain delete(Integer id) throws BadRequestException, GenericException{
+    public void delete(Integer id) throws BadRequestException, GenericException{
         try {
             Optional<ServiceDomain> valid = this.serviceDomainRepository.findById(id);
             if (valid.isEmpty()) {
@@ -96,8 +96,6 @@ public class ServiceDomainService {
             }
 
             this.serviceDomainRepository.delete(valid.get());
-
-            return valid.get();
 
         }catch (BadRequestException e){
             throw e;

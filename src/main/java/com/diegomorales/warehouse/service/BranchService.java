@@ -102,7 +102,7 @@ public class BranchService {
         }
     }
 
-    public BranchDTO delete(Integer id) throws GenericException, BadRequestException{
+    public void delete(Integer id) throws GenericException, BadRequestException{
         try {
 
             Optional<Branch> valid = this.repository.findById(id);
@@ -114,8 +114,6 @@ public class BranchService {
             BeanUtils.copyProperties(valid.get(), dto);
 
             this.repository.delete(valid.get());
-
-            return dto;
 
         }catch (BadRequestException e){
             throw  e;

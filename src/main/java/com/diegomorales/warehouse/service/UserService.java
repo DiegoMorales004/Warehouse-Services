@@ -116,7 +116,7 @@ public class UserService {
         }
     }
 
-    public UserDomain delete(Integer id) throws GenericException, BadRequestException {
+    public void delete(Integer id) throws GenericException, BadRequestException {
         try {
             Optional<UserDomain> valid = this.repository.findById(id);
             if (valid.isEmpty()) {
@@ -126,7 +126,6 @@ public class UserService {
             this.userRoleService.deleteByUser(id);
             this.repository.delete(valid.get());
 
-            return valid.get();
         }catch (BadRequestException e){
             throw e;
         }catch (Exception e){
