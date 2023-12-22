@@ -28,6 +28,12 @@ public class WarehouseController {
         return ResponseEntity.ok(response);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> update(@PathVariable("id") Integer id, @RequestBody WarehouseDTO dto) throws BadRequestException, GenericException{
+        var response = this.service.update(id, dto);
+        return ResponseEntity.ok(response);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Integer id) throws GenericException, BadRequestException{
         this.service.delete(id);

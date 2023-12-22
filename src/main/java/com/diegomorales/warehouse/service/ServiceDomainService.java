@@ -14,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -125,6 +127,24 @@ public class ServiceDomainService {
             log.error("Processing error", e);
             throw new GenericException("Error processing request");
         }
+    }
+
+    public List<Integer> findServicesByName(List<String> servicesNames) throws BadRequestException{
+
+        List<Integer> ids = new ArrayList<>();
+
+        for(String serviceName : servicesNames){
+            Optional<ServiceDomain> valid = this.serviceDomainRepository.findFirstByNameContainsIgnoreCase(serviceName);
+            if(valid.isEmpty()){
+                throw new BadRequestException("The service " + serviceName + " does not exist");
+            }
+
+            ids.add(valid.get().getId());
+
+        }
+
+        return ids;
+
     }
 
 

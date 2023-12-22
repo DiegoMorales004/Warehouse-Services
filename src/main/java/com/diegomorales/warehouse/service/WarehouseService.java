@@ -1,23 +1,16 @@
 package com.diegomorales.warehouse.service;
 
-import com.diegomorales.warehouse.domain.Branch;
-import com.diegomorales.warehouse.domain.ServiceWarehouse;
-import com.diegomorales.warehouse.domain.UserDomain;
-import com.diegomorales.warehouse.domain.Warehouse;
+import com.diegomorales.warehouse.domain.*;
 import com.diegomorales.warehouse.dto.WarehouseDTO;
 import com.diegomorales.warehouse.exception.BadRequestException;
 import com.diegomorales.warehouse.exception.GenericException;
-import com.diegomorales.warehouse.repository.BranchRepository;
-import com.diegomorales.warehouse.repository.ServiceWarehouseRepository;
-import com.diegomorales.warehouse.repository.UserRepository;
-import com.diegomorales.warehouse.repository.WarehouseRepository;
+import com.diegomorales.warehouse.repository.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -25,11 +18,13 @@ import java.util.Optional;
 public class WarehouseService {
 
     private WarehouseRepository repository;
+    private ServiceRepository serviceRepository;
     private BranchRepository branchRepository;
     private UserRepository userRepository;
     private ServiceWarehouseRepository serviceWarehouseRepository;
 
     private ServiceWarehouseService serviceWarehouseService;
+    private ServiceDomainService serviceDomainService;
 
     public Warehouse save(WarehouseDTO dto) throws GenericException, BadRequestException{
         try {
@@ -52,7 +47,8 @@ public class WarehouseService {
             var saved = this.repository.save(entity);
 
             if (!dto.getExtraServices().isEmpty()) {
-                serviceWarehouseService.saveAllById(dto.getExtraServices(), saved.getId());
+                List<Integer> idServices =  this.serviceWarehouseService.findAllServicesById(dto.getExtraServices());
+                this.serviceWarehouseService.saveAllById(idServices, saved.getId());
             }
 
             return saved;
@@ -68,10 +64,7 @@ public class WarehouseService {
     public WarehouseDTO findOne(Integer id) throws GenericException, BadRequestException{
         try {
 
-            Optional<Warehouse> valid = this.repository.findById(id);
-            if(valid.isEmpty()){
-                throw new BadRequestException("The warehouse does not exist");
-            }
+           Warehouse valid = checkWarehouseExistence(id);
 
             List<ServiceWarehouse> extraServices = this.serviceWarehouseRepository.findAllByWarehouseId(id);
 
@@ -80,10 +73,52 @@ public class WarehouseService {
                          ExSer.getServiceWarehouseId().getId_service()
             ).toList();
 
-            var dto = new WarehouseDTO();
-            BeanUtils.copyProperties(valid.get(), dto);
+            List<String> extraServicesNames = new ArrayList<>();
 
-            dto.setExtraServices(extraServicesIds);
+            for(Integer idService : extraServicesIds){
+                Optional<ServiceDomain> validService = this.serviceRepository.findById(idService);
+
+                validService.ifPresent(serviceDomain -> extraServicesNames.add(serviceDomain.getName()));
+            }
+
+            var dto = new WarehouseDTO();
+            BeanUtils.copyProperties(valid, dto);
+
+            dto.setExtraServices(extraServicesNames);
+
+            return dto;
+
+
+        }catch (BadRequestException e){
+            throw e;
+        } catch (Exception e) {
+            log.error("Processing error", e);
+            throw new GenericException("Error processing request");
+        }
+    }
+
+    public WarehouseDTO update(Integer id, WarehouseDTO dto) throws GenericException, BadRequestException{
+        try {
+
+            Warehouse valid = checkWarehouseExistence(id);
+
+            Optional<Warehouse> validWarehouse = this.repository.findFirstByCodeContainsIgnoreCase(dto.getCode());
+            if(validWarehouse.isPresent() && !Objects.equals(validWarehouse.get().getId(), id)){
+                throw new BadRequestException("The code is already in use");
+            }
+
+            Optional<Branch> validBranch = this.branchRepository.findById(dto.getId_branch());
+            if(validBranch.isEmpty()){
+                throw new BadRequestException("The branch does not exit");
+            }
+
+            WarehouseDTO oldWarehouse = this.findOne(id);
+
+            compareServices(oldWarehouse.getExtraServices(), dto.getExtraServices(), id);
+
+            BeanUtils.copyProperties(dto, valid, "id");
+
+            this.repository.save(valid);
 
             return dto;
 
@@ -99,12 +134,9 @@ public class WarehouseService {
     public void delete(Integer id) throws BadRequestException, GenericException{
         try {
 
-            Optional<Warehouse> valid = this.repository.findById(id);
-            if(valid.isEmpty()){
-                throw new BadRequestException("The warehouse does not exist");
-            }
+            Warehouse valid = checkWarehouseExistence(id);
 
-            this.repository.delete(valid.get());
+            this.repository.delete(valid);
 
         }catch (BadRequestException e){
             throw e;
@@ -114,16 +146,78 @@ public class WarehouseService {
         }
     }
 
+    /**
+     *
+     * @param id Code id of the warehouse to check
+     * @return Warehouse found
+     * @throws BadRequestException Not found exception
+     */
+    private Warehouse checkWarehouseExistence(Integer id) throws BadRequestException{
+        Optional<Warehouse> valid = this.repository.findById(id);
+        if(valid.isEmpty()){
+            throw new BadRequestException("The warehouse does not exist");
+        }
+
+        return valid.get();
+    }
+
+    /**
+     *
+     * @param id Code id of the user to check
+     * @throws BadRequestException Not found exception
+     */
     private void checkUserExistence(Integer id) throws BadRequestException{
-        try {
-            if(id != null){
-                Optional<UserDomain> validUser = this.userRepository.findById(id);
-                if(validUser.isEmpty()){
-                    throw new BadRequestException("The user does not exit");
-                }
+        if(id != null){
+            Optional<UserDomain> validUser = this.userRepository.findById(id);
+            if(validUser.isEmpty()){
+                throw new BadRequestException("The user does not exit");
             }
-        } catch (BadRequestException e) {
+        }
+    }
+
+    /**
+     * Compare the two lists to find out which relationships to delete or create.
+     * @param oldServices List (String) of the old services
+     * @param newServices List (String) of the new services
+     * @param idWarehouse id of the warehouse on which everything will be worked
+     * @throws GenericException General error
+     * @throws BadRequestException Error when transforming lists into integers
+     */
+    public void compareServices( List<String> oldServices, List<String> newServices, Integer idWarehouse ) throws GenericException, BadRequestException{
+        try {
+
+            //Transform name Lists to ID Lists
+            List<Integer> oldIds = this.serviceDomainService.findServicesByName(oldServices);
+            List<Integer> newIds = this.serviceDomainService.findServicesByName(newServices);
+
+            Iterator<Integer> iterator = newIds.iterator();
+
+            while (iterator.hasNext()){
+                Integer id = iterator.next();
+
+                var index = oldIds.indexOf(id);
+                if(index != -1){
+
+                    iterator.remove();
+                    oldIds.remove(id);
+
+                }
+
+            }
+
+            if(!oldIds.isEmpty()){
+                this.serviceWarehouseService.deleteAllServicesByWarehouse(oldIds, idWarehouse);
+            }
+            if(!newIds.isEmpty()){
+                this.serviceWarehouseService.saveAllById(newIds, idWarehouse);
+            }
+
+
+        }catch (BadRequestException e){
             throw e;
+        } catch (Exception e) {
+            log.error("Processing error", e);
+            throw new GenericException("Error processing request");
         }
     }
 
