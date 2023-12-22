@@ -20,5 +20,6 @@ public class WarehouseDTO implements Serializable {
     private String size;
     private Double price;
     private Integer id_branch;
-    private List<String> services;
+    private Integer id_user;
+    private List<Integer> extraServices;
 }

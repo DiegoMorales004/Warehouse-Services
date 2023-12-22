@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class WarehouseService implements Serializable {
+public class ServiceWarehouse implements Serializable {
     @EmbeddedId
-    private WarehouseServiceId warehouseServiceId;
+    private ServiceWarehouseId serviceWarehouseId;
 }

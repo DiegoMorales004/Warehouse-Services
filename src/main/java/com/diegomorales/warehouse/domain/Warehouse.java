@@ -25,4 +25,5 @@ public class Warehouse {
     private String size;
     private Double price;
     private Integer id_branch;
+    private Integer id_user;
 }

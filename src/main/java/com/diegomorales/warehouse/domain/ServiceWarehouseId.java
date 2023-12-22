@@ -13,7 +13,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class WarehouseServiceId implements Serializable {
+public class ServiceWarehouseId implements Serializable {
     private Integer id_warehouse;
     private Integer id_service;
 }
