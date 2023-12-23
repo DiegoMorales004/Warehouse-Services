@@ -58,7 +58,7 @@ public class ServiceWarehouseService {
             List<Integer> ids = new ArrayList<>();
 
             for(String nameService : nameServices){
-                Optional<ServiceDomain> valid = this.serviceRepository.findFirstByNameContainsIgnoreCase(nameService);
+                Optional<ServiceDomain> valid = this.serviceRepository.findFirstByNameIgnoreCase(nameService);
                 if(valid.isEmpty()){
                     throw new BadRequestException("The service " + nameService + " does not exist");
                 }

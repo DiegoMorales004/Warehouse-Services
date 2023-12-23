@@ -28,7 +28,7 @@ public class ServiceDomainService {
 
     public ServiceDomain save(ServiceDTO dto) throws GenericException, BadRequestException, DataIntegrityViolationException{
         try {
-            Optional<ServiceDomain> valid = this.serviceDomainRepository.findFirstByNameContainsIgnoreCase(dto.getName());
+            Optional<ServiceDomain> valid = this.serviceDomainRepository.findFirstByNameIgnoreCase(dto.getName());
             if (valid.isPresent()) {
                 throw new BadRequestException("The name of the service is already in use");
             }
@@ -74,7 +74,7 @@ public class ServiceDomainService {
                 throw new BadRequestException("The service does not exists");
             }
 
-            Optional<ServiceDomain> validName = this.serviceDomainRepository.findFirstByNameContainsIgnoreCase(dto.getName());
+            Optional<ServiceDomain> validName = this.serviceDomainRepository.findFirstByNameIgnoreCase(dto.getName());
             if (validName.isPresent() && !Objects.equals(validName.get().getId(), id)) {
                 throw new BadRequestException("The name of the new service is already in use");
             }
@@ -133,13 +133,17 @@ public class ServiceDomainService {
 
         List<Integer> ids = new ArrayList<>();
 
-        for(String serviceName : servicesNames){
-            Optional<ServiceDomain> valid = this.serviceDomainRepository.findFirstByNameContainsIgnoreCase(serviceName);
-            if(valid.isEmpty()){
-                throw new BadRequestException("The service " + serviceName + " does not exist");
-            }
 
-            ids.add(valid.get().getId());
+        for(String serviceName : servicesNames){
+            if (serviceName != null && !serviceName.isEmpty()) {
+
+                Optional<ServiceDomain> valid = this.serviceDomainRepository.findFirstByNameIgnoreCase(serviceName);
+                if(valid.isEmpty()){
+                    throw new BadRequestException("The service " + serviceName + " does not exist");
+                }
+
+                ids.add(valid.get().getId());
+            }
 
         }
 

@@ -149,19 +149,15 @@ public class UserService {
             List<UserDTO> usersWithRoles = new ArrayList<>(Collections.emptyList());
             response.forEach(
                     user -> {
-                        UserDTO dto = new UserDTO();
-                        BeanUtils.copyProperties(user, dto);
                         try {
-                            dto.setRoles(this.userRoleService.findAllRolesByUser(user.getId()));
-                        } catch (GenericException e) {
+                            usersWithRoles.add( this.findOne(user.getId()) );
+                        } catch (GenericException | BadRequestException e) {
                             throw new RuntimeException(e);
                         }
-
-                        usersWithRoles.add(dto);
                     }
             );
 
-            return new PageImpl<>(usersWithRoles);
+            return new PageImpl<>(usersWithRoles, response.getPageable(), response.getTotalElements());
 
         }catch (NoContentException e){
             throw e;

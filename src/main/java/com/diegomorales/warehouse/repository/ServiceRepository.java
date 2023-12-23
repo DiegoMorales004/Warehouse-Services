@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface ServiceRepository extends JpaRepository<ServiceDomain, Integer> {
-    Optional<ServiceDomain> findFirstByNameContainsIgnoreCase(String name);
+    Optional<ServiceDomain> findFirstByNameIgnoreCase(String name);
     Page<ServiceDomain> findAllByNameNotContainsIgnoreCase(String search, Pageable page);
 }
