@@ -6,23 +6,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Entity(name = "warehouses")
+@Entity(name = "leases")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Warehouse {
+public class Lease {
 
-    static final String SEQ_NAME = "SEQ_WAREHOUSES";
+    static final String SEQ_NAME = "SEQ_LEASES";
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQ_NAME)
     @SequenceGenerator(name = SEQ_NAME, sequenceName = SEQ_NAME, allocationSize = 1)
     private Integer id;
-    private String code;
-    private String description;
-    private Boolean available;
-    private String size;
-    private Double price;
-    private Integer id_branch;
+    private Integer id_user;
+    private Integer id_warehouse;
+    private Double total;
 }

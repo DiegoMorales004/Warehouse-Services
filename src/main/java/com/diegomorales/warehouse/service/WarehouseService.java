@@ -24,7 +24,6 @@ public class WarehouseService {
     private WarehouseRepository repository;
     private ServiceRepository serviceRepository;
     private BranchRepository branchRepository;
-    private UserRepository userRepository;
     private ServiceWarehouseRepository serviceWarehouseRepository;
 
     private ServiceWarehouseService serviceWarehouseService;
@@ -42,8 +41,6 @@ public class WarehouseService {
             if (validBranch.isEmpty()) {
                 throw new BadRequestException("The branch does not exit");
             }
-
-            checkUserExistence(dto.getId_user());
 
             var entity = new Warehouse();
             BeanUtils.copyProperties(dto, entity);
@@ -199,19 +196,6 @@ public class WarehouseService {
         }
 
         return valid.get();
-    }
-
-    /**
-     * @param id Code id of the user to check
-     * @throws BadRequestException Not found exception
-     */
-    private void checkUserExistence(Integer id) throws BadRequestException {
-        if (id != null) {
-            Optional<UserDomain> validUser = this.userRepository.findById(id);
-            if (validUser.isEmpty()) {
-                throw new BadRequestException("The user does not exit");
-            }
-        }
     }
 
     /**

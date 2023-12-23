@@ -12,13 +12,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class WarehouseDTO implements Serializable {
+public class LeaseDTO implements Serializable {
     private Integer id;
-    private String code;
-    private String description;
-    private Boolean available;
-    private String size;
-    private Double price;
-    private Integer id_branch;
+    private Integer id_user;
+    private Integer id_warehouse;
     private List<String> extraServices;
 }

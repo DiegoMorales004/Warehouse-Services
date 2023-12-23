@@ -259,4 +259,8 @@
 
     </changeSet>
 
+    <changeSet id="deleteColumnIdUserFromWarehouses" author="DiegoChMs">
+        <dropColumn tableName="warehouses" columnName="id_user"/>
+    </changeSet>
+
 </databaseChangeLog>
