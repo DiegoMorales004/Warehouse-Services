@@ -200,5 +200,63 @@
         />
 
     </changeSet>
+    
+<!--    Add table leases-->
+    <changeSet id="6" author="DiegoChMs">
+
+        <createSequence sequenceName="SEQ_LEASES"/>
+
+        <createTable tableName="leases">
+            <column name="id" type="INTEGER" defaultValue="NEXTVAL('SEQ_LEASES')">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="id_user" type="INTEGER"/>
+            <column name="id_warehouse" type="INTEGER"/>
+            <column name="total" type="DECIMAL(10,2)"/>
+
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="leases"
+                baseColumnNames="id_user"
+                constraintName="fk_leases_users"
+                referencedTableName="users"
+                referencedColumnNames="id"
+        />
+
+        <addForeignKeyConstraint
+                baseTableName="leases"
+                baseColumnNames="id_warehouse"
+                constraintName="fk_leases_warehouses"
+                referencedTableName="warehouses"
+                referencedColumnNames="id"
+        />
+
+        <createTable tableName="leases_services">
+            <column name="id_lease" type="INTEGER">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="id_service" type="INTEGER">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="leases_services"
+                baseColumnNames="id_lease"
+                constraintName="fk_leasesServices_leases"
+                referencedTableName="leases"
+                referencedColumnNames="id"
+        />
+
+        <addForeignKeyConstraint
+                baseTableName="leases_services"
+                baseColumnNames="id_service"
+                constraintName="fk_leasesServices_services"
+                referencedTableName="services"
+                referencedColumnNames="id"
+        />
+
+    </changeSet>
 
 </databaseChangeLog>
