@@ -146,16 +146,11 @@ public class UserService {
                 throw new NoContentException("No records found");
             }
 
-            List<UserDTO> usersWithRoles = new ArrayList<>(Collections.emptyList());
-            response.forEach(
-                    user -> {
-                        try {
-                            usersWithRoles.add( this.findOne(user.getId()) );
-                        } catch (GenericException | BadRequestException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-            );
+            List<UserDTO> usersWithRoles = new ArrayList<>();
+
+            for (UserDomain user : response) {
+                usersWithRoles.add( this.findOne(user.getId() ) );
+            }
 
             return new PageImpl<>(usersWithRoles, response.getPageable(), response.getTotalElements());
 

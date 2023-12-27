@@ -4,14 +4,19 @@ import com.diegomorales.warehouse.domain.*;
 import com.diegomorales.warehouse.dto.LeaseDTO;
 import com.diegomorales.warehouse.exception.BadRequestException;
 import com.diegomorales.warehouse.exception.GenericException;
+import com.diegomorales.warehouse.exception.NoContentException;
 import com.diegomorales.warehouse.repository.LeaseRepository;
 import com.diegomorales.warehouse.repository.UserRepository;
 import com.diegomorales.warehouse.repository.WarehouseRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,11 +34,11 @@ public class LeaseService {
     public Lease save(LeaseDTO dto) throws GenericException, BadRequestException {
         try {
 
-            Warehouse warehouse = warehouseValid(dto.getId_warehouse());
+            Warehouse warehouse = warehouseValid(dto.getIdWarehouse());
 
-            userValid(dto.getId_user());
+            userValid(dto.getIdUser());
 
-            Optional<Lease> validRecord = this.repository.findFirstByIdUserAndIdWarehouse(dto.getId_user(), dto.getId_warehouse());
+            Optional<Lease> validRecord = this.repository.findFirstByIdUserAndIdWarehouse(dto.getIdUser(), dto.getIdWarehouse());
 
             if (validRecord.isPresent()) {
                 throw new BadRequestException("The user already occupies this warehouse.");
@@ -117,6 +122,35 @@ public class LeaseService {
             this.repository.delete(valid.get());
 
         }catch (BadRequestException e){
+            throw e;
+        } catch (Exception e) {
+            log.error("Processing error", e);
+            throw new GenericException("Error processing request");
+        }
+    }
+
+    public Page<LeaseDTO> findAll(String search, Pageable page) throws NoContentException, GenericException{
+        try {
+
+            Page<Lease> response;
+            if(search != null ){
+                response = this.repository.findAllByIdUserContainsIgnoreCase(search, page);
+            }else {
+                response = this.repository.findAll(page);
+            }
+
+            if( response.isEmpty() ){
+                throw new NoContentException("No records found");
+            }
+
+            List<LeaseDTO> leaseWithServices = new ArrayList<>();
+            for (Lease lease : response) {
+                leaseWithServices.add( this.findOne(lease.getId() ) );
+            }
+
+            return new PageImpl<>(leaseWithServices, response.getPageable(), response.getTotalElements());
+
+        }catch (NoContentException e){
             throw e;
         } catch (Exception e) {
             log.error("Processing error", e);

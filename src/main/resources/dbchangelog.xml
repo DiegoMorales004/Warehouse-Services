@@ -263,4 +263,10 @@
         <dropColumn tableName="warehouses" columnName="id_user"/>
     </changeSet>
 
+    <changeSet id="addColumnActiveToLeases" author="DiegoChMs">
+        <addColumn tableName="leases">
+            <column name="active" type="boolean"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

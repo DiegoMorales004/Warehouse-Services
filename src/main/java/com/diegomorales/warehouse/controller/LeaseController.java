@@ -3,8 +3,11 @@ package com.diegomorales.warehouse.controller;
 import com.diegomorales.warehouse.dto.LeaseDTO;
 import com.diegomorales.warehouse.exception.BadRequestException;
 import com.diegomorales.warehouse.exception.GenericException;
+import com.diegomorales.warehouse.exception.NoContentException;
 import com.diegomorales.warehouse.service.LeaseService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +35,12 @@ public class LeaseController {
     public ResponseEntity<Void> delete( @PathVariable("id") Integer id) throws GenericException, BadRequestException{
         this.service.delete(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<LeaseDTO>> findAll(@RequestParam(value = "search", required = false) String id_user, Pageable page) throws NoContentException, GenericException{
+        var response = this.service.findAll(id_user, page);
+        return ResponseEntity.ok(response);
     }
 
 }

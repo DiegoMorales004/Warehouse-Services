@@ -14,8 +14,9 @@ import java.util.List;
 @ToString
 public class LeaseDTO implements Serializable {
     private Integer id;
-    private Integer id_user;
-    private Integer id_warehouse;
+    private Integer idUser;
+    private Integer idWarehouse;
     private Double total;
+    private Boolean active;
     private List<String> extraServices;
 }

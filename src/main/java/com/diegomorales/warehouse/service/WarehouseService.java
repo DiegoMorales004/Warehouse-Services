@@ -162,16 +162,10 @@ public class WarehouseService {
             }
 
             List<WarehouseDTO> listWarehouseDTO = new ArrayList<>();
-            response.forEach(
-                    warehouse ->
-                    {
-                        try {
-                            listWarehouseDTO.add( this.findOne(warehouse.getId()) );
-                        } catch (GenericException | BadRequestException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-            );
+
+            for (Warehouse warehouse : response) {
+                listWarehouseDTO.add( this.findOne( warehouse.getId() ) );
+            }
 
             return new PageImpl<>(listWarehouseDTO, response.getPageable(), response.getTotalElements());
 
