@@ -1,8 +1,6 @@
 package com.diegomorales.warehouse.service;
 
-import com.diegomorales.warehouse.domain.Lease;
-import com.diegomorales.warehouse.domain.UserDomain;
-import com.diegomorales.warehouse.domain.Warehouse;
+import com.diegomorales.warehouse.domain.*;
 import com.diegomorales.warehouse.dto.LeaseDTO;
 import com.diegomorales.warehouse.exception.BadRequestException;
 import com.diegomorales.warehouse.exception.GenericException;
@@ -31,7 +29,7 @@ public class LeaseService {
     public Lease save(LeaseDTO dto) throws GenericException, BadRequestException {
         try {
 
-            warehouseValid(dto.getId_warehouse());
+            Warehouse warehouse = warehouseValid(dto.getId_warehouse());
 
             userValid(dto.getId_user());
 
@@ -42,7 +40,8 @@ public class LeaseService {
             }
 
             Lease entity = new Lease();
-            BeanUtils.copyProperties(dto, entity, "id");
+            BeanUtils.copyProperties(dto, entity, "id", "total");
+            entity.setTotal(warehouse.getPrice());
 
             Lease saved = this.repository.save(entity);
 
@@ -74,9 +73,13 @@ public class LeaseService {
             LeaseDTO dto = new LeaseDTO();
             BeanUtils.copyProperties(valid.get(), dto);
 
-            List<String> extraServices = this.serviceLeaseService.findServicesByIdLease(id);
+            List<ServiceDomain> extraServices = this.serviceLeaseService.findServicesByIdLease(id);
 
-            dto.setExtraServices(extraServices);
+            List<String> extraServicesNames = extraServices.stream().map(
+                    ServiceDomain::getName
+            ).toList();
+
+            dto.setExtraServices(extraServicesNames);
 
             return dto;
 
@@ -96,6 +99,21 @@ public class LeaseService {
                 throw new BadRequestException("The lease with the id " + id + " does not exist");
             }
 
+            List<ServiceDomain> serviceDomains = this.serviceLeaseService.findServicesByIdLease(id);
+            if ( !serviceDomains.isEmpty() ) {
+
+                for ( ServiceDomain serviceDomain : serviceDomains ){
+
+                        ServiceLeaseId serviceLeaseId = new ServiceLeaseId();
+                        serviceLeaseId.setId_service(serviceDomain.getId());
+                        serviceLeaseId.setId_lease(id);
+
+                        this.serviceLeaseService.delete(serviceLeaseId);
+
+                }
+
+            }
+
             this.repository.delete(valid.get());
 
         }catch (BadRequestException e){
@@ -107,7 +125,7 @@ public class LeaseService {
     }
 
     //Check warehouse
-    private void warehouseValid(Integer id) throws GenericException, BadRequestException{
+    private Warehouse warehouseValid(Integer id) throws GenericException, BadRequestException{
         try {
 
             Optional<Warehouse> availableWarehouse = this.warehouseRepository.findById(id);
@@ -119,6 +137,8 @@ public class LeaseService {
             if (!availableWarehouse.get().getAvailable()) {
                 throw new BadRequestException("The warehouse is not available.");
             }
+
+            return availableWarehouse.get();
 
         }catch (BadRequestException e){
             throw e;

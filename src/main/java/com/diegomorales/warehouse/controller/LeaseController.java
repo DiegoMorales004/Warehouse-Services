@@ -17,7 +17,7 @@ public class LeaseController {
     private final LeaseService service;
 
     @PostMapping
-    public ResponseEntity<Object> save(LeaseDTO dto) throws GenericException, BadRequestException{
+    public ResponseEntity<Object> save(@RequestBody LeaseDTO dto) throws GenericException, BadRequestException{
         var response = this.service.save(dto);
         return ResponseEntity.ok(response);
     }

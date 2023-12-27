@@ -16,5 +16,6 @@ public class LeaseDTO implements Serializable {
     private Integer id;
     private Integer id_user;
     private Integer id_warehouse;
+    private Double total;
     private List<String> extraServices;
 }

@@ -70,10 +70,10 @@ public class ServiceLeaseService {
 
     }
 
-    public List<String> findServicesByIdLease(Integer id) throws GenericException, BadRequestException {
+    public List<ServiceDomain> findServicesByIdLease(Integer id) throws GenericException, BadRequestException {
         try {
 
-            List<String> servicesName = new ArrayList<>();
+            List<ServiceDomain> serviceDomains = new ArrayList<>();
 
             List<ServiceLease> serviceLeases = this.repository.findAllByIdLease(id);
 
@@ -87,12 +87,12 @@ public class ServiceLeaseService {
                                 throw new RuntimeException(e);
                             }
                         } else {
-                            servicesName.add(validService.get().getName());
+                            serviceDomains.add(validService.get());
                         }
                     }
             );
 
-            return servicesName;
+            return serviceDomains;
 
         } catch (Exception e) {
             log.error("Processing error", e);
