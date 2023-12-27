@@ -54,7 +54,7 @@ public class ServiceDomainService {
 
             Optional<ServiceDomain> valid = this.serviceDomainRepository.findById(id);
             if (valid.isEmpty()) {
-                throw new BadRequestException("The service does not exist");
+                throw new BadRequestException("The service with id : " + id + " does not exist");
             }
             var dto = new ServiceDTO();
             BeanUtils.copyProperties(valid.get(), dto);
@@ -132,7 +132,6 @@ public class ServiceDomainService {
     public List<Integer> findServicesByName(List<String> servicesNames) throws BadRequestException{
 
         List<Integer> ids = new ArrayList<>();
-
 
         for(String serviceName : servicesNames){
             if (serviceName != null && !serviceName.isEmpty()) {

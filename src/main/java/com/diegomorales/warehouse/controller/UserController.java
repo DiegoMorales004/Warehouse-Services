@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> delete(@PathVariable("id") Integer id) throws GenericException, BadRequestException {
+    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) throws GenericException, BadRequestException {
         this.service.delete(id);
         return ResponseEntity.ok().build();
     }
