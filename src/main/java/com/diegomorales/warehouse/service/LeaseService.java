@@ -37,7 +37,7 @@ public class LeaseService {
 
             userValid(dto.getIdUser());
 
-            Optional<Lease> validRecord = this.repository.findFirstByIdUserAndIdWarehouse(dto.getIdUser(), dto.getIdWarehouse());
+            Optional<Lease> validRecord = this.repository.findByIdUserAndIdWarehouse(dto.getIdWarehouse(), dto.getIdUser());
 
             if (validRecord.isPresent()) {
                 throw new BadRequestException("The user already occupies this warehouse.");

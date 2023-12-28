@@ -19,6 +19,7 @@ public class Lease {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQ_NAME)
     @SequenceGenerator(name = SEQ_NAME, sequenceName = SEQ_NAME, allocationSize = 1)
     private Integer id;
+
     private Integer idUser;
     private Integer idWarehouse;
     private Double total;

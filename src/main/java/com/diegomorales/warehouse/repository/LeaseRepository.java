@@ -15,6 +15,6 @@ public interface LeaseRepository extends JpaRepository<Lease, Integer> {
     Page<Lease> findAllByIdUserContainsIgnoreCase(String id_user, Pageable page);
 
     @Query("SELECT ls FROM leases ls WHERE ls.idWarehouse = ?1 AND ls.idUser = ?2")
-    Optional<Lease> findFirstByIdUserAndIdWarehouse(Integer id_warehouse, Integer id_user);
+    Optional<Lease> findByIdUserAndIdWarehouse(Integer id_warehouse, Integer id_user);
 
 }
