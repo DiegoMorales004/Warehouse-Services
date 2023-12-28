@@ -55,7 +55,7 @@ public class ServiceLeaseService {
         }
     }
 
-    public void saveAll(List<Integer> listIds, Integer id_lease) throws GenericException, BadRequestException {
+    public void saveAllServicesByLease(List<Integer> listIds, Integer id_lease) throws GenericException, BadRequestException {
 
         for (Integer idService : listIds) {
 
@@ -97,6 +97,18 @@ public class ServiceLeaseService {
         } catch (Exception e) {
             log.error("Processing error", e);
             throw new GenericException("Error processing request");
+        }
+    }
+
+    public void deleteAllServicesByLease(List<Integer> idsServices, Integer idLease) throws BadRequestException, GenericException {
+        for (Integer idsService : idsServices) {
+
+            ServiceLeaseId id = new ServiceLeaseId();
+            id.setId_lease(idLease);
+            id.setId_service(idsService);
+
+            this.delete(id);
+
         }
     }
 

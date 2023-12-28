@@ -115,7 +115,7 @@ public class WarehouseService {
 
             WarehouseDTO oldWarehouse = this.findOne(id);
 
-            compareServices(oldWarehouse.getExtraServices(), dto.getExtraServices(), id);
+            compareServicesOfWarehouse(oldWarehouse.getExtraServices(), dto.getExtraServices(), id);
 
             BeanUtils.copyProperties(dto, valid, "id");
 
@@ -183,7 +183,7 @@ public class WarehouseService {
      * @return Warehouse found
      * @throws BadRequestException Not found exception
      */
-    private Warehouse checkWarehouseExistence(Integer id) throws BadRequestException {
+    public Warehouse checkWarehouseExistence(Integer id) throws BadRequestException {
         Optional<Warehouse> valid = this.repository.findById(id);
         if (valid.isEmpty()) {
             throw new BadRequestException("The warehouse does not exist");
@@ -201,27 +201,15 @@ public class WarehouseService {
      * @throws GenericException    General error
      * @throws BadRequestException Error when transforming lists into integers
      */
-    public void compareServices(List<String> oldServices, List<String> newServices, Integer idWarehouse) throws GenericException, BadRequestException {
+    private void compareServicesOfWarehouse(List<String> oldServices, List<String> newServices, Integer idWarehouse) throws GenericException, BadRequestException {
         try {
 
             //Transform name Lists to ID Lists
-            List<Integer> oldIds = this.serviceDomainService.findServicesByName(oldServices);
-            List<Integer> newIds = this.serviceDomainService.findServicesByName(newServices);
 
-            Iterator<Integer> iterator = newIds.iterator();
+            Map<String, List<Integer>> lists = this.serviceDomainService.compareServiceLists(oldServices, newServices);
 
-            while (iterator.hasNext()) {
-                Integer id = iterator.next();
-
-                var index = oldIds.indexOf(id);
-                if (index != -1) {
-
-                    iterator.remove();
-                    oldIds.remove(id);
-
-                }
-
-            }
+            List<Integer> oldIds = lists.get("First list");
+            List<Integer> newIds = lists.get("Second list");
 
             if (!oldIds.isEmpty()) {
                 this.serviceWarehouseService.deleteAllServicesByWarehouse(oldIds, idWarehouse);

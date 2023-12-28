@@ -14,10 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -129,9 +126,9 @@ public class ServiceDomainService {
         }
     }
 
-    public List<Integer> findServicesByName(List<String> servicesNames) throws BadRequestException{
+    public List<ServiceDomain> findServicesByName(List<String> servicesNames) throws BadRequestException{
 
-        List<Integer> ids = new ArrayList<>();
+        List<ServiceDomain> services = new ArrayList<>();
 
         for(String serviceName : servicesNames){
             if (serviceName != null && !serviceName.isEmpty()) {
@@ -141,12 +138,47 @@ public class ServiceDomainService {
                     throw new BadRequestException("The service " + serviceName + " does not exist");
                 }
 
-                ids.add(valid.get().getId());
+                services.add( valid.get() );
             }
 
         }
 
-        return ids;
+        return services;
+
+    }
+
+    public List<Integer> findServicesIDsByName(List<String> services) throws BadRequestException {
+        List<ServiceDomain> domains = this.findServicesByName(services);
+        return domains.stream().map(
+                ServiceDomain::getId
+        ).toList();
+    }
+
+    public Map<String, List<Integer>> compareServiceLists(List<String> firstList, List<String> secondList) throws BadRequestException {
+
+        List<Integer> firstListByIDs = findServicesIDsByName(firstList);
+        List<Integer> secondListByIDs = findServicesIDsByName(secondList);
+
+        Iterator<Integer> iterator = secondListByIDs.iterator();
+
+        while (iterator.hasNext()) {
+            Integer id = iterator.next();
+
+            var index = firstListByIDs.indexOf(id);
+            if (index != -1) {
+
+                iterator.remove();
+                firstListByIDs.remove(id);
+
+            }
+
+        }
+
+        Map<String, List<Integer>> map = new HashMap<>();
+        map.put("First list", firstListByIDs);
+        map.put("Second list", secondListByIDs);
+
+        return map;
 
     }
 
