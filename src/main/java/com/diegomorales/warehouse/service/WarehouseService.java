@@ -184,6 +184,7 @@ public class WarehouseService {
      * @throws BadRequestException Not found exception
      */
     public Warehouse checkWarehouseExistence(Integer id) throws BadRequestException {
+
         Optional<Warehouse> valid = this.repository.findById(id);
         if (valid.isEmpty()) {
             throw new BadRequestException("The warehouse does not exist");

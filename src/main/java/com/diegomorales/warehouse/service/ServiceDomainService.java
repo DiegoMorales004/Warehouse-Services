@@ -159,24 +159,23 @@ public class ServiceDomainService {
         List<Integer> firstListByIDs = findServicesIDsByName(firstList);
         List<Integer> secondListByIDs = findServicesIDsByName(secondList);
 
-        Iterator<Integer> iterator = secondListByIDs.iterator();
+        ArrayList<Integer> firstArrayList = new ArrayList<>(firstListByIDs);
+        ArrayList<Integer> secondArrayList = new ArrayList<>(secondListByIDs);
 
-        while (iterator.hasNext()) {
-            Integer id = iterator.next();
-
+        for (Integer id : secondListByIDs) {
             var index = firstListByIDs.indexOf(id);
             if (index != -1) {
-
-                iterator.remove();
-                firstListByIDs.remove(id);
-
+                firstArrayList.remove(id);
+                secondArrayList.remove(id);
             }
-
         }
 
+        List<Integer> returnListOne = firstArrayList.stream().toList();
+        List<Integer> returnListSecond = secondArrayList.stream().toList();
+
         Map<String, List<Integer>> map = new HashMap<>();
-        map.put("First list", firstListByIDs);
-        map.put("Second list", secondListByIDs);
+        map.put("First list", returnListOne);
+        map.put("Second list", returnListSecond);
 
         return map;
 

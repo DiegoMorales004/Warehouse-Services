@@ -111,6 +111,7 @@ public class LeaseService {
 
             userValid(dto.getIdUser());
 
+            //Check the warehouse
             Warehouse warehouse;
             if (!Objects.equals(dto.getIdWarehouse(), oldLease.getIdWarehouse())) {
                 warehouse = this.warehouseService.checkWarehouseExistence(dto.getIdWarehouse());
@@ -121,6 +122,7 @@ public class LeaseService {
             compareExtraServicesOfLease(oldLease.getExtraServices(), dto.getExtraServices(), id);
 
             Lease entity = new Lease();
+            BeanUtils.copyProperties(oldLease, entity);
             BeanUtils.copyProperties(dto, entity, "id", "total");
 
             if( !dto.getExtraServices().isEmpty() ) {
