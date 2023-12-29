@@ -1,0 +1,1064 @@
+{
+	"info": {
+		"_postman_id": "0969543e-14ac-4021-bb22-3a2809f7f02e",
+		"name": "Warehouse",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31816422"
+	},
+	"item": [
+		{
+			"name": "Role",
+			"item": [
+				{
+					"name": "Crear rol",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 0,\r\n    \"name\": \"Prueba\",\r\n    \"description\": \"Rol de prueba\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8082/warehouse/api/role",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener todos los roles",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/warehouse/api/role?page=0&size=10",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"role"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Encontrar un rol",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/warehouse/api/role/4",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"role",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar rol",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 4,\r\n    \"name\": \"Prueba actualizado\",\r\n    \"description\": \"Rol de prueba\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8082/warehouse/api/role/4",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"role",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar rol",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/warehouse/api/role/4",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"role",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Crear usuario ",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"username\": \"alfred\",\r\n    \"password\": \"1234\",\r\n    \"email\": \"alfred@alfred\",\r\n    \"roles\": [\"EMPLOYEE\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8082/warehouse/api/user",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindAll users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/warehouse/api/user?page=0&size=2",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"user"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Service",
+			"item": [
+				{
+					"name": "Agregar servicio",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 0,\r\n    \"name\": \"Prueba\",\r\n    \"description\": \"Servicio de limpieza para toda la bodega\",\r\n    \"price\": \"10\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8082/warehouse/api/service",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"service"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Encontrar un servicio",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/warehouse/api/service/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"service",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar servicio",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n            \"id\": 1,\r\n            \"name\": \"limpieza actualizado\",\r\n            \"description\": \"Servicio de limpieza para toda la bodega\",\r\n            \"price\": 10.0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8082/warehouse/api/service/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"service",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Encontrar todos los servicios",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/warehouse/api/service?page=0&size=10",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"service"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar servicio",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/warehouse/api/service/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"service",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Branch",
+			"item": [
+				{
+					"name": "Guardar sucursal",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 0,\r\n    \"name\": \"Sucursal capital\",\r\n    \"code\": \"123capital\",\r\n    \"location\": \"Zona 1\",\r\n    \"parking\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8082/warehouse/api/branch",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"branch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Encontrar todas las sucursales",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/warehouse/api/branch?page=0&size=10",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"branch"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Encontrar una sucursal",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/warehouse/api/branch/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"branch",
+								"2"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "size",
+									"value": "10",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar sucursal",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 2,\r\n    \"name\": \"Sucursal actualizada\",\r\n    \"code\": \"123capital\",\r\n    \"location\": \"Zona 1\",\r\n    \"parking\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8082/warehouse/api/branch/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"branch",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar sucursal",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/warehouse/api/branch/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"branch",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "warehouse",
+			"item": [
+				{
+					"name": "Crear bodega",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"code\": \"2a\",\r\n    \"description\": \"Bodega normal\",\r\n    \"available\": true,\r\n    \"size\": \"100 metros cuadrados\",\r\n    \"price\": \"110\",\r\n    \"id_branch\": 1,\r\n    \"extraServices\": [\"Prueba\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8082/warehouse/api/warehouse",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"warehouse"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Encontrar una bodega",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/warehouse/api/warehouse/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"warehouse",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Encontrar todas las bodegas",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/warehouse/api/warehouse?page=0&size=10",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"warehouse"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar bodega",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"code\": \"Actualizado\",\r\n    \"description\": \"Actualizado\",\r\n    \"available\": true,\r\n    \"size\": \"100 metros cuadrados\",\r\n    \"price\": 100.0,\r\n    \"id_branch\": 1,\r\n    \"id_user\": 1,\r\n    \"extraServices\": [\r\n        \"\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8082/warehouse/api/warehouse/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"warehouse",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar saucursal",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/warehouse/api/warehouse/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"warehouse",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Leases",
+			"item": [
+				{
+					"name": "Crear alquiler",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"idUser\": 1,\r\n    \"idWarehouse\": 2,\r\n    \"total\": 200,\r\n    \"active\": true,\r\n    \"extraServices\": [\"Prueba\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8082/warehouse/api/lease",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"lease"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar alquiler",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/warehouse/api/lease/11",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"lease",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Encontrar alquiler",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/warehouse/api/lease/10",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"lease",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Encontrar todos los alquilers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8082/warehouse/api/lease?page=0&size=10",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"lease"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar alquiler",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 10,\r\n    \"idUser\": 1,\r\n    \"idWarehouse\": 2,\r\n    \"total\": 110.0,\r\n    \"active\": false,\r\n    \"extraServices\": [\r\n        \"Prueba\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8082/warehouse/api/lease/10",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"warehouse",
+								"api",
+								"lease",
+								"10"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"ADMIN\",\r\n    \"password\": \"1234\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8082/warehouse/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"warehouse",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

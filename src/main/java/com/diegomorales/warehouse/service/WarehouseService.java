@@ -228,4 +228,14 @@ public class WarehouseService {
         }
     }
 
+    public void disableWarehouse(Warehouse warehouse) {
+        warehouse.setAvailable(false);
+        this.repository.save(warehouse);
+    }
+
+    public void activateWarehouse(Warehouse warehouse) {
+        warehouse.setAvailable(true);
+        this.repository.save(warehouse);
+    }
+
 }

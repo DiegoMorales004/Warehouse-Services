@@ -2,6 +2,7 @@ package com.diegomorales.warehouse.service;
 
 import com.diegomorales.warehouse.domain.*;
 import com.diegomorales.warehouse.dto.LeaseDTO;
+import com.diegomorales.warehouse.dto.WarehouseDTO;
 import com.diegomorales.warehouse.exception.BadRequestException;
 import com.diegomorales.warehouse.exception.GenericException;
 import com.diegomorales.warehouse.exception.NoContentException;
@@ -69,6 +70,8 @@ public class LeaseService {
                 saved = this.repository.save(entity);
             }
 
+            this.warehouseService.disableWarehouse(warehouse);
+
             return saved;
 
         } catch (BadRequestException e) {
@@ -107,24 +110,30 @@ public class LeaseService {
     public LeaseDTO update(Integer id, LeaseDTO dto) throws BadRequestException, GenericException {
         try {
 
+            //Find and check the lease
             LeaseDTO oldLease = this.findOne(id);
 
+            //Check the user
             userValid(dto.getIdUser());
 
             //Check the warehouse
-            Warehouse warehouse;
+            Warehouse warehouse = new Warehouse();
             if (!Objects.equals(dto.getIdWarehouse(), oldLease.getIdWarehouse())) {
                 warehouse = this.warehouseService.checkWarehouseExistence(dto.getIdWarehouse());
             } else {
-                warehouse = warehouseValid(dto.getIdWarehouse());
+                WarehouseDTO warehouseDTO = this.warehouseService.findOne(dto.getIdWarehouse());
+                BeanUtils.copyProperties(warehouseDTO, warehouse);
             }
 
+            //Check the services
             compareExtraServicesOfLease(oldLease.getExtraServices(), dto.getExtraServices(), id);
 
+            //Copy properties
             Lease entity = new Lease();
             BeanUtils.copyProperties(oldLease, entity);
             BeanUtils.copyProperties(dto, entity, "id", "total");
 
+            //Calculate total
             if( !dto.getExtraServices().isEmpty() ) {
                 List<ServiceDomain> extraServicesDomain = this.serviceDomainService.findServicesByName(dto.getExtraServices());
                 Double total = calculateTotal(warehouse.getPrice(), extraServicesDomain );
@@ -133,7 +142,11 @@ public class LeaseService {
                 entity.setTotal(warehouse.getPrice());
             }
 
+            //Save updates
             this.repository.save(entity);
+
+            //Change Warehouse Availability if Changed
+            changeWarehouseAvailability( oldLease.getIdWarehouse(), warehouse);
 
             return this.findOne(id);
 
@@ -313,6 +326,21 @@ public class LeaseService {
         } catch (Exception e) {
             log.error("Processing error", e);
             throw new GenericException("Error processing request");
+        }
+    }
+
+    public void changeWarehouseAvailability(Integer idOldWarehouse, Warehouse newWarehouse) throws BadRequestException, GenericException {
+
+        Warehouse oldWarehouse = new Warehouse();
+        WarehouseDTO warehouseDTO = this.warehouseService.findOne(idOldWarehouse);
+
+        BeanUtils.copyProperties(warehouseDTO, oldWarehouse);
+
+        if(oldWarehouse.getAvailable() != newWarehouse.getAvailable()){
+            //Active old warehouse
+            this.warehouseService.activateWarehouse(oldWarehouse);
+            //Disable new warehouse
+            this.warehouseService.disableWarehouse(newWarehouse);
         }
     }
 
