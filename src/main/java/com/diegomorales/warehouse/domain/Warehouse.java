@@ -24,5 +24,5 @@ public class Warehouse {
     private Boolean available;
     private String size;
     private Double price;
-    private Integer id_branch;
+    private Integer idBranch;
 }

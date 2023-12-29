@@ -17,4 +17,5 @@ public class BranchDTO implements Serializable {
     private String code;
     private String location;
     private Boolean parking;
+    private Boolean active;
 }

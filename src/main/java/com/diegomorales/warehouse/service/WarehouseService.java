@@ -32,12 +32,12 @@ public class WarehouseService {
     public Warehouse save(WarehouseDTO dto) throws GenericException, BadRequestException {
         try {
 
-            Optional<Warehouse> valid = this.repository.findFirstByCodeContainsIgnoreCase(dto.getCode());
+            Optional<Warehouse> valid = this.repository.findFirstByCodeIgnoreCase(dto.getCode());
             if (valid.isPresent()) {
                 throw new BadRequestException("The code is already in use");
             }
 
-            Optional<Branch> validBranch = this.branchRepository.findById(dto.getId_branch());
+            Optional<Branch> validBranch = this.branchRepository.findById(dto.getIdBranch());
             if (validBranch.isEmpty()) {
                 throw new BadRequestException("The branch does not exit");
             }
@@ -103,12 +103,12 @@ public class WarehouseService {
 
             Warehouse valid = checkWarehouseExistence(id);
 
-            Optional<Warehouse> validWarehouse = this.repository.findFirstByCodeContainsIgnoreCase(dto.getCode());
+            Optional<Warehouse> validWarehouse = this.repository.findFirstByCodeIgnoreCase(dto.getCode());
             if (validWarehouse.isPresent() && !Objects.equals(validWarehouse.get().getId(), id)) {
                 throw new BadRequestException("The code is already in use");
             }
 
-            Optional<Branch> validBranch = this.branchRepository.findById(dto.getId_branch());
+            Optional<Branch> validBranch = this.branchRepository.findById(dto.getIdBranch());
             if (validBranch.isEmpty()) {
                 throw new BadRequestException("The branch does not exit");
             }

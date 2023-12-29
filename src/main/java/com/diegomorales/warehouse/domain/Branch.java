@@ -23,4 +23,5 @@ public class Branch {
     private String code;
     private String location;
     private Boolean parking;
+    private Boolean active;
 }

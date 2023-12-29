@@ -38,10 +38,10 @@ public class BranchController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) throws GenericException, BadRequestException{
-        this.service.delete(id);
-        return ResponseEntity.ok().build();
+    @PutMapping("/disable/{id}")
+    public ResponseEntity<Object> disable(@PathVariable("id") Integer id) throws GenericException, BadRequestException{
+        var response = this.service.disable(id);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping

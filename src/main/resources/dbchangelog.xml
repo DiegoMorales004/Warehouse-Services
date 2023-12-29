@@ -269,4 +269,10 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="addColumnActiveToBranches" author="DiegoChMs">
+        <addColumn tableName="branches">
+            <column name="active" type="boolean"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
