@@ -274,5 +274,11 @@
             <column name="active" type="boolean"/>
         </addColumn>
     </changeSet>
+    
+    <changeSet id="addColumnActiveTo" author="DiegoChMs">
+        <addColumn tableName="users">
+            <column name="active" type="Boolean"/>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>

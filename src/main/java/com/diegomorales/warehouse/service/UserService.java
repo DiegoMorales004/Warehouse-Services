@@ -25,6 +25,12 @@ public class UserService {
 
     public UserDomain save(UserDTO dto) throws GenericException, BadRequestException {
         try {
+
+            Optional<UserDomain> validName = this.repository.findFirstByUsernameIgnoreCase(dto.getUsername());
+            if (validName.isPresent()) {
+                throw new BadRequestException("The user with this name already exists.");
+            }
+
             Optional<UserDomain> validEmail = this.repository.findFirstByEmailContainsIgnoreCase(dto.getEmail());
             if (validEmail.isPresent()) {
                 throw new BadRequestException("The user with this email already exists.");
@@ -49,7 +55,7 @@ public class UserService {
                 throw new BadRequestException("The user with this email already exists");
             }
 
-            Optional<UserDomain> validUserName = this.repository.findFirstByUsernameContainsIgnoreCase(dto.getUsername());
+            Optional<UserDomain> validUserName = this.repository.findFirstByUsernameIgnoreCase(dto.getUsername());
             if (validUserName.isPresent()) {
                 throw new BadRequestException("The user with this userName already exists.");
             }
@@ -163,7 +169,7 @@ public class UserService {
     }
 
     private void VerifyUserName_Roles(UserDTO dto) throws BadRequestException {
-        Optional<UserDomain> validUserName = this.repository.findFirstByUsernameContainsIgnoreCase(dto.getUsername());
+        Optional<UserDomain> validUserName = this.repository.findFirstByUsernameIgnoreCase(dto.getUsername());
         if (validUserName.isPresent()) {
             throw new BadRequestException("The user with this userName already exists.");
         }

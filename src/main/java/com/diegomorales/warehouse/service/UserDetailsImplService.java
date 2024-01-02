@@ -5,6 +5,8 @@ import com.diegomorales.warehouse.exception.GenericException;
 import com.diegomorales.warehouse.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,16 +30,18 @@ public class UserDetailsImplService implements UserDetailsService {
     private UserRoleService userRoleService;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        UserDomain userDomain = this.userRepository.findFirstByUsernameContainsIgnoreCase(username)
-                .orElseThrow(() -> new UsernameNotFoundException("The user does not exits"));
+    public UserDetails loadUserByUsername(String username) throws AuthenticationException {
+        Optional<UserDomain> userDomain = this.userRepository.findFirstByUsernameIgnoreCase(username);
+        if (userDomain.isEmpty()) {
+            throw new UsernameNotFoundException("The user does not exist");
+        }
+        if(!userDomain.get().getActive()){
+            throw new BadCredentialsException("The user is disable");
+        }
 
         List<String> roles;
-
         try {
-             roles = this.userRoleService.findAllRolesByUser(userDomain.getId());
-
+            roles = this.userRoleService.findAllRolesByUser(userDomain.get().getId());
         } catch (GenericException e) {
             throw new RuntimeException(e);
         }
@@ -46,15 +51,14 @@ public class UserDetailsImplService implements UserDetailsService {
                         new SimpleGrantedAuthority("ROLE_" + role)
         ).collect(Collectors.toSet());
 
-
-
         return new User(
-                userDomain.getUsername(),
-                userDomain.getPassword(),
-                true,
-                true,
-                true,
-                true,
+                userDomain.get().getUsername(),
+                userDomain.get().getPassword(),
+                userDomain.get().getActive(),
+                userDomain.get().getActive(),
+                userDomain.get().getActive(),
+                userDomain.get().getActive(),
                 authorities);
     }
+
 }

@@ -11,7 +11,8 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<UserDomain, Integer> {
     Optional<UserDomain> findFirstByEmailContainsIgnoreCase(String email);
-    Optional<UserDomain> findFirstByUsernameContainsIgnoreCase(String email);
+
+    Optional<UserDomain> findFirstByUsernameIgnoreCase(String username);
 
     Page<UserDomain> findAllByUsernameContainsIgnoreCase(String search, Pageable page);
 }

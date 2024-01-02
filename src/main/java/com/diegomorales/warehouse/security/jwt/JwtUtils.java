@@ -1,6 +1,5 @@
 package com.diegomorales.warehouse.security.jwt;
 
-import com.diegomorales.warehouse.exception.GenericException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
