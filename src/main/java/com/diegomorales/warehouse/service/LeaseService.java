@@ -197,7 +197,7 @@ public class LeaseService {
 
             Page<Lease> response;
             if (search != null) {
-                response = this.repository.findAllByIdUserContainsIgnoreCase(search, page);
+                response = this.repository.findAllByIdUser(search, page);
             } else {
                 response = this.repository.findAll(page);
             }

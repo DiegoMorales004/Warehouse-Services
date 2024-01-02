@@ -1,8 +1,10 @@
 package com.diegomorales.warehouse.service;
 
+import com.diegomorales.warehouse.domain.Lease;
 import com.diegomorales.warehouse.domain.UserDomain;
 import com.diegomorales.warehouse.dto.UserDTO;
 import com.diegomorales.warehouse.exception.*;
+import com.diegomorales.warehouse.repository.LeaseRepository;
 import com.diegomorales.warehouse.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,23 +22,19 @@ import java.util.*;
 @Slf4j
 public class UserService {
     private final UserRepository repository;
+    private final LeaseRepository leaseRepository;
+
     private final RoleService roleService;
     private final UserRoleService userRoleService;
 
     public UserDomain save(UserDTO dto) throws GenericException, BadRequestException {
         try {
 
-            Optional<UserDomain> validName = this.repository.findFirstByUsernameIgnoreCase(dto.getUsername());
-            if (validName.isPresent()) {
-                throw new BadRequestException("The user with this name already exists.");
-            }
+            checkValidEmail(dto.getEmail());
 
-            Optional<UserDomain> validEmail = this.repository.findFirstByEmailContainsIgnoreCase(dto.getEmail());
-            if (validEmail.isPresent()) {
-                throw new BadRequestException("The user with this email already exists.");
-            }
+            checkValidUserName(dto.getUsername());
 
-            VerifyUserName_Roles(dto);
+            verifyRoles(dto);
 
             return savingProcess(dto);
 
@@ -50,17 +48,14 @@ public class UserService {
 
     public UserDomain saveWithDefaultRole(UserDTO dto) throws GenericException, BadRequestException{
         try {
-            Optional<UserDomain> valid = this.repository.findFirstByEmailContainsIgnoreCase(dto.getEmail());
-            if (valid.isPresent()) {
-                throw new BadRequestException("The user with this email already exists");
-            }
 
-            Optional<UserDomain> validUserName = this.repository.findFirstByUsernameIgnoreCase(dto.getUsername());
-            if (validUserName.isPresent()) {
-                throw new BadRequestException("The user with this userName already exists.");
-            }
+            checkValidEmail(dto.getEmail());
+
+            checkValidUserName(dto.getUsername());
 
             dto.setRoles(List.of("USER"));
+
+            verifyRoles(dto);
 
             return savingProcess(dto);
 
@@ -76,13 +71,10 @@ public class UserService {
     public UserDTO findOne(Integer id) throws GenericException, BadRequestException{
         try {
 
-            Optional<UserDomain> valid = this.repository.findById(id);
-            if (valid.isEmpty()) {
-                throw new BadRequestException("The user does not exists");
-            }
+            UserDomain userDomain = verifyUserExistence(id);
 
             var dto = new UserDTO();
-            BeanUtils.copyProperties(valid.get(), dto);
+            BeanUtils.copyProperties(userDomain, dto);
 
             List<String> roles = this.userRoleService.findAllRolesByUser(id);
 
@@ -100,18 +92,23 @@ public class UserService {
     public void update(Integer id, UserDTO dto) throws GenericException, BadRequestException{
         try {
 
-            Optional<UserDomain> valid = this.repository.findById(id);
-            if (valid.isEmpty()) {
-                throw new BadRequestException("The user does not exists");
+            UserDomain userDomain = verifyUserExistence(id);
+
+            if(!dto.getUsername().equals(userDomain.getUsername())){
+                checkValidUserName(dto.getUsername());
             }
 
-            VerifyUserName_Roles(dto);
+            if(!dto.getEmail().equals(userDomain.getEmail())){
+                checkValidEmail(dto.getEmail());
+            }
 
-            BeanUtils.copyProperties(dto, valid.get(), "id");
-            valid.get().setPassword(encryptPassword(valid.get().getPassword()));
+            verifyRoles(dto);
+
+            BeanUtils.copyProperties(dto, userDomain, "id");
+            userDomain.setPassword(encryptPassword(dto.getPassword()));
 
             roleComparison(id, dto.getRoles());
-            this.repository.save(valid.get());
+            this.repository.save(userDomain);
 
 
         }catch (BadRequestException e){
@@ -122,15 +119,24 @@ public class UserService {
         }
     }
 
-    public void delete(Integer id) throws GenericException, BadRequestException {
+    //Disable instead of deleting
+    public void disable(Integer id) throws BadRequestException, GenericException{
         try {
-            Optional<UserDomain> valid = this.repository.findById(id);
-            if (valid.isEmpty()) {
-                throw new BadRequestException("The user does not exists");
+
+            UserDomain userDomain = verifyUserExistence(id);
+
+            if(!userDomain.getActive()){
+                throw new BadRequestException("The user already is disable");
             }
 
-            this.userRoleService.deleteByUser(id);
-            this.repository.delete(valid.get());
+            List<Lease> leases = this.leaseRepository.findAllByIdUser(id);
+
+            if(!leases.isEmpty()){
+                checkLeasesActive(leases);
+            }
+
+            userDomain.setActive(false);
+            this.repository.save(userDomain);
 
         }catch (BadRequestException e){
             throw e;
@@ -139,7 +145,6 @@ public class UserService {
             throw new GenericException("Error processing request");
         }
     }
-
     public Page<UserDTO> findAll(String search, Pageable page) throws GenericException, NoContentException{
         try {
             Page<UserDomain> response;
@@ -168,11 +173,7 @@ public class UserService {
         }
     }
 
-    private void VerifyUserName_Roles(UserDTO dto) throws BadRequestException {
-        Optional<UserDomain> validUserName = this.repository.findFirstByUsernameIgnoreCase(dto.getUsername());
-        if (validUserName.isPresent()) {
-            throw new BadRequestException("The user with this userName already exists.");
-        }
+    private void verifyRoles(UserDTO dto) throws BadRequestException {
 
         List<String> nonExistentRoles = this.roleService.incorrectRoles(dto.getRoles());
         if (!nonExistentRoles.isEmpty()) {
@@ -245,6 +246,41 @@ public class UserService {
             throw new GenericException("Error processing request");
         }
 
+    }
+
+    public UserDomain verifyUserExistence(Integer id) throws BadRequestException{
+        Optional<UserDomain> userDomain = this.repository.findById(id);
+        if(userDomain.isEmpty()){
+            throw new BadRequestException("The user does not exist");
+        }
+
+        return userDomain.get();
+
+    }
+
+    public void checkValidUserName(String userName) throws BadRequestException{
+        Optional<UserDomain> validUserName = this.repository.findFirstByUsernameIgnoreCase(userName);
+        if (validUserName.isPresent()) {
+            throw new BadRequestException("The user with this userName already exists.");
+        }
+    }
+
+    public void checkValidEmail(String email) throws BadRequestException{
+        Optional<UserDomain> validEmail = this.repository.findFirstByEmailContainsIgnoreCase(email);
+        if (validEmail.isPresent()) {
+            throw new BadRequestException("The user with this email already exists.");
+        }
+    }
+
+    public void checkLeasesActive(List<Lease> list) throws BadRequestException{
+        List<Lease> leasesList = list.stream().toList();
+        for (Lease lease : leasesList){
+
+            if(lease.getActive()){
+                throw new BadRequestException("The user cannot be disable because the lease with id " + lease.getId() + " is still active.");
+            }
+
+        }
     }
 
 }

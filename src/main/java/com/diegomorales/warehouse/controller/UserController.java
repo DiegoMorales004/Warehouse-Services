@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -18,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/api/user")
 @AllArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 public class UserController {
     private final UserService service;
 
@@ -29,7 +31,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<Object> saveWithDefaultRole(@RequestBody UserDTO dto) throws GenericException, BadRequestException {
-        UserDomain response = this.service.saveWithDefaultRole(dto);
+        var response = this.service.saveWithDefaultRole(dto);
         return ResponseEntity.ok(response);
     }
 
@@ -45,9 +47,9 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) throws GenericException, BadRequestException {
-        this.service.delete(id);
+    @PutMapping("/disable/{id}")
+    public ResponseEntity<Void> disable(@PathVariable("id") Integer id) throws GenericException, BadRequestException {
+        this.service.disable(id);
         return ResponseEntity.ok().build();
     }
 
