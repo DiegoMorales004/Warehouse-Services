@@ -41,9 +41,9 @@ public class ServiceController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) throws GenericException, BadRequestException, DataIntegrityViolationException {
-        this.service.delete(id);
+    @PutMapping("/disable/{id}")
+    public ResponseEntity<Void> disable(@PathVariable Integer id) throws GenericException, BadRequestException, DataIntegrityViolationException {
+        this.service.disable(id);
         return ResponseEntity.ok().build();
     }
 

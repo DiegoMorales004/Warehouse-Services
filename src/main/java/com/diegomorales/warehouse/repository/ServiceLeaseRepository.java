@@ -7,11 +7,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ServiceLeaseRepository extends JpaRepository<ServiceLease, ServiceLeaseId> {
 
     @Query("SELECT ls FROM leases_services ls WHERE ls.serviceLeaseId.id_lease = ?1")
     List<ServiceLease> findAllByIdLease(Integer idLease);
+
+    @Query("SELECT ls FROM leases_services ls WHERE ls.serviceLeaseId.id_service = ?1")
+    Optional<ServiceLease> findFirstByIdService(Integer idService);
 
 }

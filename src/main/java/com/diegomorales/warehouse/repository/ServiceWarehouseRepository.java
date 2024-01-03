@@ -7,10 +7,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ServiceWarehouseRepository extends JpaRepository<ServiceWarehouse, ServiceWarehouseId> {
     @Query("SELECT ws FROM warehouses_services ws WHERE ws.serviceWarehouseId.id_warehouse = ?1")
     List<ServiceWarehouse> findAllByWarehouseId(Integer id);
+
+    @Query("SELECT ws FROM warehouses_services  ws WHERE ws.serviceWarehouseId.id_service = ?1")
+    Optional<ServiceWarehouse> findFirstByServiceId(Integer idServce);
 
 }

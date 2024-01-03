@@ -1,11 +1,15 @@
 package com.diegomorales.warehouse.service;
 
 import com.diegomorales.warehouse.domain.ServiceDomain;
+import com.diegomorales.warehouse.domain.ServiceLease;
+import com.diegomorales.warehouse.domain.ServiceWarehouse;
 import com.diegomorales.warehouse.dto.ServiceDTO;
 import com.diegomorales.warehouse.exception.BadRequestException;
 import com.diegomorales.warehouse.exception.GenericException;
 import com.diegomorales.warehouse.exception.NoContentException;
+import com.diegomorales.warehouse.repository.ServiceLeaseRepository;
 import com.diegomorales.warehouse.repository.ServiceRepository;
+import com.diegomorales.warehouse.repository.ServiceWarehouseRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -22,6 +26,8 @@ import java.util.*;
 public class ServiceDomainService {
 
     private ServiceRepository serviceDomainRepository;
+    private ServiceWarehouseRepository serviceWarehouseRepository;
+    private ServiceLeaseRepository serviceLeaseRepository;
 
     public ServiceDomain save(ServiceDTO dto) throws GenericException, BadRequestException, DataIntegrityViolationException{
         try {
@@ -87,12 +93,15 @@ public class ServiceDomainService {
         }
     }
 
-    public void delete(Integer id) throws BadRequestException, GenericException{
+    public void disable(Integer id) throws BadRequestException, GenericException{
         try {
             Optional<ServiceDomain> valid = this.serviceDomainRepository.findById(id);
             if (valid.isEmpty()) {
                 throw new BadRequestException("The service does not exits");
             }
+
+            //Check if the service is in use
+            checkServiceInUse(id);
 
             this.serviceDomainRepository.delete(valid.get());
 
@@ -178,6 +187,21 @@ public class ServiceDomainService {
         map.put("Second list", returnListSecond);
 
         return map;
+
+    }
+
+    public void checkServiceInUse(Integer idService) throws BadRequestException{
+
+        Optional<ServiceWarehouse> serviceWarehouse = this.serviceWarehouseRepository.findFirstByServiceId(idService);
+        if(serviceWarehouse.isPresent()){
+            throw new BadRequestException("The service is in use by a warehouse");
+        }
+
+        Optional<ServiceLease> serviceLease = this.serviceLeaseRepository.findFirstByIdService(idService);
+        if (serviceLease.isPresent()) {
+            throw new BadRequestException("The service is in use by a lease");
+        }
+
 
     }
 
