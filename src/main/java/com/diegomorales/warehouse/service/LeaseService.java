@@ -192,7 +192,7 @@ public class LeaseService {
         }
     }
 
-    public Page<LeaseDTO> findAll(String search, Pageable page) throws NoContentException, GenericException {
+    public Page<LeaseDTO> findAll(Integer search, Pageable page) throws NoContentException, GenericException {
         try {
 
             Page<Lease> response;

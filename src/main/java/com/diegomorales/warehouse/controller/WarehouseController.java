@@ -38,9 +38,9 @@ public class WarehouseController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) throws GenericException, BadRequestException{
-        this.service.delete(id);
+    @PutMapping("/disable/{id}")
+    public ResponseEntity<Void> disable(@PathVariable("id") Integer id) throws GenericException, BadRequestException{
+        this.service.disable(id);
         return ResponseEntity.ok().build();
     }
 

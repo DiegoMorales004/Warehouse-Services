@@ -46,7 +46,7 @@ public class LeaseController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<LeaseDTO>> findAll(@RequestParam(value = "search", required = false) String id_user, Pageable page) throws NoContentException, GenericException{
+    public ResponseEntity<Page<LeaseDTO>> findAll(@RequestParam(value = "search", required = false) Integer id_user, Pageable page) throws NoContentException, GenericException{
         var response = this.service.findAll(id_user, page);
         return ResponseEntity.ok(response);
     }

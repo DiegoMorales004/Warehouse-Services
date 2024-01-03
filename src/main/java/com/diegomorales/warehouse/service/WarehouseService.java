@@ -25,6 +25,7 @@ public class WarehouseService {
     private ServiceRepository serviceRepository;
     private BranchRepository branchRepository;
     private ServiceWarehouseRepository serviceWarehouseRepository;
+    private LeaseRepository leaseRepository;
 
     private ServiceWarehouseService serviceWarehouseService;
     private ServiceDomainService serviceDomainService;
@@ -132,12 +133,21 @@ public class WarehouseService {
         }
     }
 
-    public void delete(Integer id) throws BadRequestException, GenericException {
+    public void disable(Integer id) throws BadRequestException, GenericException {
         try {
 
             Warehouse valid = checkWarehouseExistence(id);
 
-            this.repository.delete(valid);
+            Optional<Lease> lease = this.leaseRepository.findFirstByIdWarehouse(id);
+            if (lease.isPresent() && lease.get().getActive()){
+                throw new BadRequestException(
+                        "The warehouse cannot be removed because it is still in use by a user"
+                );
+            }
+
+            valid.setAvailable(false);
+
+            this.repository.save(valid);
 
         } catch (BadRequestException e) {
             throw e;
