@@ -1,4 +1,4 @@
-package com.diegomorales.warehouse.security.erros;
+package com.diegomorales.warehouse.security.errors;
 
 import com.diegomorales.warehouse.dto.ErrorDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;

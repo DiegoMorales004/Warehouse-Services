@@ -1,6 +1,6 @@
 package com.diegomorales.warehouse.security;
 
-import com.diegomorales.warehouse.security.erros.CustomAuthenticationFailureHandler;
+import com.diegomorales.warehouse.security.errors.CustomAuthenticationFailureHandler;
 import com.diegomorales.warehouse.security.filters.JwtAuthenticationFilter;
 import com.diegomorales.warehouse.security.filters.JwtAuthorizationFilter;
 import com.diegomorales.warehouse.security.jwt.JwtUtils;

@@ -1,7 +1,7 @@
 package com.diegomorales.warehouse.security.filters;
 
 import com.diegomorales.warehouse.domain.UserDomain;
-import com.diegomorales.warehouse.security.erros.CustomAuthenticationFailureHandler;
+import com.diegomorales.warehouse.security.errors.CustomAuthenticationFailureHandler;
 import com.diegomorales.warehouse.security.jwt.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
