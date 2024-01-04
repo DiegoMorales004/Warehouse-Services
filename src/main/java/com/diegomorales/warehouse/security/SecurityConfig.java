@@ -8,6 +8,7 @@ import com.diegomorales.warehouse.service.UserDetailsImplService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -47,6 +48,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/api/user/register").permitAll();
+                    auth.requestMatchers(HttpMethod.GET,"/api/warehouse/**").permitAll();
                     auth.requestMatchers("/login").permitAll();
                     auth.anyRequest().authenticated();
                 })

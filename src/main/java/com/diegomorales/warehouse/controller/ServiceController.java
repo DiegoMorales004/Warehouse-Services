@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/api/service")
 @AllArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
 public class ServiceController {
 
     private ServiceDomainService service;
