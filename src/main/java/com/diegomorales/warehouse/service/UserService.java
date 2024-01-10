@@ -173,6 +173,24 @@ public class UserService {
         }
     }
 
+    public UserDTO findUserByUserName(String userName) throws GenericException, BadRequestException{
+        try {
+
+            Optional<UserDomain> userDomain = this.repository.findFirstByUsernameIgnoreCase(userName);
+            if(userDomain.isEmpty()){
+                throw new BadRequestException("The user does not exist");
+            }
+
+            return this.findOne(userDomain.get().getId());
+
+        }catch (BadRequestException e){
+            throw e;
+        }catch (Exception e){
+            log.error("Processing error", e);
+            throw new GenericException("Error processing request");
+        }
+    }
+
     private void verifyRoles(UserDTO dto) throws BadRequestException {
 
         List<String> nonExistentRoles = this.roleService.incorrectRoles(dto.getRoles());
