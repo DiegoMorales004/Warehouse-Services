@@ -67,7 +67,7 @@ Así también deseo encontrar puntos de mi código en el cual pueda mejorar y op
 ## Motivación de la creación del proyecto:
 
 1. **Aplicación Práctica de Conocimientos Recientes:**
-    - Iniciar un proyecto desde cero fue una oportunidad para aplicar los conocimientos recientemente adquiridos durante mis prácticas.
+    - Iniciar un proyecto desde cero fue una oportunidad para aplicar los conocimientos recientemente adquiridos.
 2. **Demostración de Habilidades:**
     - Crear proyectos funcionales es una manera efectiva de demostrar mis habilidades y competencias en el desarrollo de software.
 3. **Exhibición del Proceso de Trabajo:**
