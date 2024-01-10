@@ -6,6 +6,7 @@ import com.diegomorales.warehouse.exception.BadRequestException;
 import com.diegomorales.warehouse.exception.GenericException;
 import com.diegomorales.warehouse.exception.NoContentException;
 import com.diegomorales.warehouse.service.ServiceDomainService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -24,7 +25,7 @@ public class ServiceController {
     private ServiceDomainService service;
 
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody ServiceDTO dto) throws GenericException, BadRequestException{
+    public ResponseEntity<Object> save(@Valid @RequestBody ServiceDTO dto) throws GenericException, BadRequestException{
         var response = this.service.save(dto);
         return ResponseEntity.ok(response);
     }
@@ -36,7 +37,7 @@ public class ServiceController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@PathVariable Integer id, @RequestBody ServiceDTO dto) throws GenericException, BadRequestException{
+    public ResponseEntity<Object> update(@PathVariable Integer id, @Valid @RequestBody ServiceDTO dto) throws GenericException, BadRequestException{
         var response = this.service.update(id, dto);
         return ResponseEntity.ok(response);
     }

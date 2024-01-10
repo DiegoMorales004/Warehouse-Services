@@ -6,6 +6,7 @@ import com.diegomorales.warehouse.exception.BadRequestException;
 import com.diegomorales.warehouse.exception.GenericException;
 import com.diegomorales.warehouse.exception.NoContentException;
 import com.diegomorales.warehouse.service.RoleService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -23,7 +24,7 @@ public class RoleController {
 
     private final RoleService service;
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody RoleDTO dto) throws GenericException, BadRequestException {
+    public ResponseEntity<Object> save( @Valid @RequestBody RoleDTO dto) throws GenericException, BadRequestException {
         var response = this.service.save(dto);
         return ResponseEntity.ok(response);
     }
@@ -35,7 +36,7 @@ public class RoleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@PathVariable("id") Integer id, @RequestBody RoleDTO dto) throws GenericException, BadRequestException{
+    public ResponseEntity<Object> update(@PathVariable("id") Integer id, @Valid @RequestBody RoleDTO dto) throws GenericException, BadRequestException{
         var response = this.service.update(id, dto);
         return ResponseEntity.ok(response);
     }

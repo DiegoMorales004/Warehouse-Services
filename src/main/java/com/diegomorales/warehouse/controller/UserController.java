@@ -7,6 +7,7 @@ import com.diegomorales.warehouse.exception.NoContentException;
 import com.diegomorales.warehouse.service.UserService;
 import com.diegomorales.warehouse.utils.TokenUtils;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,13 +28,13 @@ public class UserController {
     private final TokenUtils tokenUtils;
 
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody UserDTO dto) throws GenericException, BadRequestException, ResponseStatusException {
+    public ResponseEntity<Object> save(@Valid @RequestBody UserDTO dto) throws GenericException, BadRequestException, ResponseStatusException {
         var response = this.service.save(dto);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Object> saveWithDefaultRole(@RequestBody UserDTO dto) throws GenericException, BadRequestException {
+    public ResponseEntity<Object> saveWithDefaultRole(@Valid @RequestBody UserDTO dto) throws GenericException, BadRequestException {
         var response = this.service.saveWithDefaultRole(dto);
         return ResponseEntity.ok(response);
     }
@@ -45,7 +46,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable("id") Integer id, @RequestBody UserDTO dto) throws GenericException, BadRequestException {
+    public ResponseEntity<Void> update(@PathVariable("id") Integer id, @Valid @RequestBody UserDTO dto) throws GenericException, BadRequestException {
         this.service.update(id, dto);
         return ResponseEntity.ok().build();
     }

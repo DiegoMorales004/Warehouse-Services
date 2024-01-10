@@ -5,6 +5,7 @@ import com.diegomorales.warehouse.exception.BadRequestException;
 import com.diegomorales.warehouse.exception.GenericException;
 import com.diegomorales.warehouse.exception.NoContentException;
 import com.diegomorales.warehouse.service.WarehouseService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +23,7 @@ public class WarehouseController {
     private final WarehouseService service;
 
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody WarehouseDTO dto) throws GenericException, BadRequestException {
+    public ResponseEntity<Object> save( @Valid @RequestBody WarehouseDTO dto) throws GenericException, BadRequestException {
         var response = this.service.save(dto);
         return ResponseEntity.ok(response);
     }
@@ -34,7 +35,7 @@ public class WarehouseController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@PathVariable("id") Integer id, @RequestBody WarehouseDTO dto) throws BadRequestException, GenericException{
+    public ResponseEntity<Object> update(@PathVariable("id") Integer id,  @Valid @RequestBody WarehouseDTO dto) throws BadRequestException, GenericException{
         var response = this.service.update(id, dto);
         return ResponseEntity.ok(response);
     }
