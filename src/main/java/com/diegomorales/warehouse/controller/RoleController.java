@@ -16,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/api/role")
 @AllArgsConstructor
@@ -26,7 +28,7 @@ public class RoleController {
     @PostMapping
     public ResponseEntity<Object> save( @Valid @RequestBody RoleDTO dto) throws GenericException, BadRequestException {
         var response = this.service.save(dto);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.created(URI.create("/api/role/" + response.getId())).build();
     }
 
     @GetMapping("/{id}")

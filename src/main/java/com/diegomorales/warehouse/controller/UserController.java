@@ -17,6 +17,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.net.URI;
+
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/api/user")
@@ -30,7 +32,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<Object> save(@Valid @RequestBody UserDTO dto) throws GenericException, BadRequestException, ResponseStatusException {
         var response = this.service.save(dto);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.created(URI.create("/api/user/" + response.getId())).build();
     }
 
     @PostMapping("/register")
