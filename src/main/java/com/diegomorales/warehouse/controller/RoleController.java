@@ -44,7 +44,7 @@ public class RoleController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) throws GenericException, BadRequestException, DataIntegrityViolationException {
+    public ResponseEntity<Void> deleteRole(@PathVariable("id") Integer id) throws GenericException, BadRequestException, DataIntegrityViolationException {
         this.service.delete(id);
         return ResponseEntity.ok().build();
     }
