@@ -15,6 +15,6 @@ public interface ServiceWarehouseRepository extends JpaRepository<ServiceWarehou
     List<ServiceWarehouse> findAllByWarehouseId(Integer id);
 
     @Query("SELECT ws FROM warehouses_services  ws WHERE ws.serviceWarehouseId.id_service = ?1")
-    Optional<ServiceWarehouse> findFirstByServiceId(Integer idServce);
+    Optional<ServiceWarehouse> findFirstByServiceId(Integer idService);
 
 }

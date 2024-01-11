@@ -22,6 +22,5 @@ public class ServiceDTO implements Serializable {
     private String name;
     private String description;
     @NotNull
-    @NotEmpty
     private Double price;
 }
