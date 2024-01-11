@@ -9,7 +9,6 @@ import com.diegomorales.warehouse.repository.UserRepository;
 import com.diegomorales.warehouse.repository.UserRoleRepository;
 import com.diegomorales.warehouse.security.jwt.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -32,8 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@AutoConfigureMockMvc
-@Slf4j
+@AutoConfigureMockMvc(addFilters = false)
 class UserControllerTest {
 
     private final static String BASE_URL = "/api/user";
@@ -153,7 +151,6 @@ class UserControllerTest {
     void profile() throws Exception{
 
         String token = "Bearer " + jwtUtils.generateAccessToken("admin");
-        log.warn("Token: " + token);
 
         when( userRepository.findFirstByUsernameIgnoreCase( any() ) ).thenReturn( Optional.of( userDomain() ) );
         when( userRepository.findById( any() ) ).thenReturn( Optional.of(userDomain()) );
