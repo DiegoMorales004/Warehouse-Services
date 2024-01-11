@@ -37,7 +37,7 @@ public class LeaseController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete( @PathVariable("id") Integer id) throws GenericException, BadRequestException{
+    public ResponseEntity<Void> deleteLease( @PathVariable("id") Integer id) throws GenericException, BadRequestException{
         this.service.delete(id);
         return ResponseEntity.ok().build();
     }

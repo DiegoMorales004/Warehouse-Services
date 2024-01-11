@@ -93,9 +93,9 @@ class RoleControllerTest {
     @WithMockUser(username = "ADMIN", roles = "ADMIN")
     void findAll() throws Exception{
 
-        Page<Role> page = new PageImpl<>(List.of(roleDomain()));
+        Page<Role> page = new PageImpl<>( List.of(roleDomain() ) );
 
-        when(roleRepository.findAll( any( PageRequest.class) ) ).thenReturn(page);
+        when(roleRepository.findAll( any( PageRequest.class) ) ).thenReturn( page );
 
         mvc.perform(
                 get(BASE_URL)

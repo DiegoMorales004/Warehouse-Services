@@ -19,10 +19,8 @@ import java.util.List;
 public class LeaseDTO implements Serializable {
     private Integer id;
     @NotNull
-    @NotEmpty
     private Integer idUser;
     @NotNull
-    @NotEmpty
     private Integer idWarehouse;
     private Double total;
     @NotNull
