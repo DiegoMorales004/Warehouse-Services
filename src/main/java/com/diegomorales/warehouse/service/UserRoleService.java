@@ -42,7 +42,7 @@ public class UserRoleService {
     }
 
     /**
-     * Method used when a user is deleted and it is necessary to delete all their roles
+     * Method used when a user is deleted, and it is necessary to delete all their roles
      * @param id_user ID of the user from whom all roles will be deleted
      */
     public void deleteByUser(Integer id_user) throws GenericException{
