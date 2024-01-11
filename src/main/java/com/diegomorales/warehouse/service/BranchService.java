@@ -32,7 +32,7 @@ public class BranchService {
     public Branch save(BranchDTO dto) throws GenericException, BadRequestException {
         try {
 
-            Optional<Branch> validName = this.repository.findFirstByNameContainsIgnoreCase(dto.getName());
+            Optional<Branch> validName = this.repository.findFirstByNameIgnoreCase(dto.getName());
             if (validName.isPresent()) {
                 throw new BadRequestException("The name is already in use");
             }
@@ -77,14 +77,14 @@ public class BranchService {
         }
     }
 
-    public BranchDTO update(Integer id, BranchDTO dto) throws GenericException, BadRequestException{
+    public Branch update(Integer id, BranchDTO dto) throws GenericException, BadRequestException{
         try {
             Optional<Branch> valid = this.repository.findById(id);
             if(valid.isEmpty()) {
                 throw new BadRequestException("The branch with this id does not exit");
             }
 
-            Optional<Branch> validName = this.repository.findFirstByNameContainsIgnoreCase(dto.getName());
+            Optional<Branch> validName = this.repository.findFirstByNameIgnoreCase(dto.getName());
             if (validName.isPresent() && !Objects.equals(validName.get().getId(), id)) {
                 throw new BadRequestException("The name is already in use");
             }
@@ -96,9 +96,7 @@ public class BranchService {
 
             BeanUtils.copyProperties(dto, valid.get(), "id");
 
-            this.repository.save(valid.get());
-
-            return dto;
+            return this.repository.save(valid.get());
 
         }catch (BadRequestException e){
             throw  e;

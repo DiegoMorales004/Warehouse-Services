@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface BranchRepository extends JpaRepository<Branch, Integer> {
-    Optional<Branch> findFirstByNameContainsIgnoreCase(String name);
+    Optional<Branch> findFirstByNameIgnoreCase(String name);
     Optional<Branch> findFirstByCodeIgnoreCase(String code);
 
     Page<Branch> findAllByNameContainsIgnoreCase(String search, Pageable page);
