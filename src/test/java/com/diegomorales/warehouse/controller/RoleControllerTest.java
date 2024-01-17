@@ -53,6 +53,34 @@ class RoleControllerTest {
 
     @Test
     @WithMockUser(username = "ADMIN", roles = "ADMIN")
+    void saveBadRequestException() throws Exception{
+
+        when(roleRepository.findFirsByNameContainsIgnoreCase(any())).thenReturn(Optional.of( roleDomain() ) );
+
+        mvc.perform(
+                post(BASE_URL)
+                        .content(objectMapper.writeValueAsString(roleDTO()))
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect( status().isBadRequest() );
+
+    }
+
+    @Test
+    @WithMockUser(username = "ADMIN", roles = "ADMIN")
+    void saveGenericException() throws Exception{
+
+        when(roleRepository.findFirsByNameContainsIgnoreCase(any())).thenThrow( new NullPointerException("") );
+
+        mvc.perform(
+                post(BASE_URL)
+                        .content(objectMapper.writeValueAsString(roleDTO()))
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect( status().isInternalServerError() );
+
+    }
+
+    @Test
+    @WithMockUser(username = "ADMIN", roles = "ADMIN")
     void findOne() throws Exception {
         when(roleRepository.findById(any())).thenReturn(Optional.of(roleDomain()));
 
@@ -60,6 +88,30 @@ class RoleControllerTest {
                 get(BASE_URL + "/1")
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk());
+
+    }
+
+    @Test
+    @WithMockUser(username = "ADMIN", roles = "ADMIN")
+    void findOneBadRequestException() throws Exception {
+        when(roleRepository.findById(any())).thenReturn(Optional.empty() );
+
+        mvc.perform(
+                get(BASE_URL + "/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isBadRequest() );
+
+    }
+
+    @Test
+    @WithMockUser(username = "ADMIN", roles = "ADMIN")
+    void findOneGenericException() throws Exception {
+        when(roleRepository.findById(any())).thenThrow( new NullPointerException() );
+
+        mvc.perform(
+                get(BASE_URL + "/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect( status().isInternalServerError() );
 
     }
 
@@ -79,6 +131,32 @@ class RoleControllerTest {
 
     @Test
     @WithMockUser(username = "ADMIN", roles = "ADMIN")
+    void updateBadRequestException() throws Exception{
+        when(roleRepository.findById(any())).thenReturn( Optional.empty() );
+
+        mvc.perform(
+                put(BASE_URL + "/1")
+                        .content(objectMapper.writeValueAsString(roleDTO()))
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @WithMockUser(username = "ADMIN", roles = "ADMIN")
+    void updateGenericException() throws Exception{
+        when(roleRepository.findById(any())).thenThrow( new NullPointerException() );
+
+        mvc.perform(
+                put(BASE_URL + "/1")
+                        .content(objectMapper.writeValueAsString(roleDTO()))
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isInternalServerError());
+
+    }
+
+    @Test
+    @WithMockUser(username = "ADMIN", roles = "ADMIN")
     void deleteRole() throws Exception{
         when(roleRepository.findById(any())).thenReturn(Optional.of(roleDomain()));
 
@@ -88,6 +166,31 @@ class RoleControllerTest {
         ).andExpect(status().isOk());
 
     }
+
+    @Test
+    @WithMockUser(username = "ADMIN", roles = "ADMIN")
+    void deleteRoleBadRequestException() throws Exception{
+        when(roleRepository.findById(any())).thenReturn(Optional.empty());
+
+        mvc.perform(
+                delete(BASE_URL + "/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @WithMockUser(username = "ADMIN", roles = "ADMIN")
+    void deleteRoleGenericException() throws Exception{
+        when(roleRepository.findById(any())).thenThrow(new NullPointerException() );
+
+        mvc.perform(
+                delete(BASE_URL + "/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isInternalServerError());
+
+    }
+
 
     @Test
     @WithMockUser(username = "ADMIN", roles = "ADMIN")
@@ -101,6 +204,32 @@ class RoleControllerTest {
                 get(BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk());
+
+    }
+
+    @Test
+    @WithMockUser(username = "ADMIN", roles = "ADMIN")
+    void findAllGenericException() throws Exception{
+
+        when(roleRepository.findAll( any( PageRequest.class) ) ).thenThrow( new NullPointerException("") );
+
+        mvc.perform(
+                get(BASE_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isInternalServerError());
+
+    }
+
+    @Test
+    @WithMockUser(username = "ADMIN", roles = "ADMIN")
+    void findAllNoContentException() throws Exception{
+
+        when(roleRepository.findAll( any( PageRequest.class) ) ).thenReturn( Page.empty() );
+
+        mvc.perform(
+                get(BASE_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNoContent() );
 
     }
 
