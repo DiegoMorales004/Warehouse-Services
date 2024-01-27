@@ -71,6 +71,34 @@ class UserControllerTest {
 
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")
+    void saveGenericException() throws Exception {
+
+        when(userRepository.findFirstByEmailContainsIgnoreCase( any() ) ).thenThrow(new NullPointerException("") );
+
+        mvc.perform(
+                post(BASE_URL)
+                        .content(objectMapper.writeValueAsString(userDTO()))
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect( status().isInternalServerError() );
+
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = "ADMIN")
+    void saveBadRequestException() throws Exception {
+
+        when(userRepository.findFirstByEmailContainsIgnoreCase( any() ) ).thenReturn(Optional.of( userDomain() ) );
+
+        mvc.perform(
+                post(BASE_URL)
+                        .content(objectMapper.writeValueAsString(userDTO()))
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isBadRequest() );
+
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = "ADMIN")
     void saveWithDefaultRole() throws Exception{
         when(userRepository.findFirstByEmailContainsIgnoreCase( any() ) ).thenReturn(Optional.empty());
         when(userRepository.findFirstByUsernameIgnoreCase( any() ) ).thenReturn(Optional.empty());
@@ -86,6 +114,30 @@ class UserControllerTest {
 
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")
+    void saveWithDefaultRoleGenericException() throws Exception{
+        when(userRepository.findFirstByEmailContainsIgnoreCase( any() ) ).thenThrow(new NullPointerException("") );
+
+        mvc.perform(
+                post(BASE_URL)
+                        .content( objectMapper.writeValueAsString( userDTO())  )
+                        .contentType( MediaType.APPLICATION_JSON )
+        ).andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = "ADMIN")
+    void saveWithDefaultRoleBadRequestException() throws Exception{
+        when(userRepository.findFirstByEmailContainsIgnoreCase( any() ) ).thenReturn( Optional.of( userDomain() ) );
+
+        mvc.perform(
+                post(BASE_URL)
+                        .content( objectMapper.writeValueAsString( userDTO())  )
+                        .contentType( MediaType.APPLICATION_JSON )
+        ).andExpect( status().isBadRequest() );
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = "ADMIN")
     void findOne() throws Exception {
         when( userRepository.findById( any() ) ).thenReturn( Optional.of(userDomain()) );
         when( userRoleRepository.findByUserId( any() ) ).thenReturn(Collections.emptyList() );
@@ -95,6 +147,32 @@ class UserControllerTest {
                         .content( objectMapper.writeValueAsString(userDTO()))
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk());
+
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = "ADMIN")
+    void findOneGenericException() throws Exception {
+        when( userRepository.findById( any() ) ).thenThrow( new NullPointerException("") );
+
+        mvc.perform(
+                get(BASE_URL + "/1")
+                        .content( objectMapper.writeValueAsString(userDTO()))
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isInternalServerError());
+
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = "ADMIN")
+    void findOneBadRequestException() throws Exception {
+        when( userRepository.findById( any() ) ).thenReturn( Optional.empty() );
+
+        mvc.perform(
+                get(BASE_URL + "/1")
+                        .content( objectMapper.writeValueAsString(userDTO()))
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isBadRequest());
 
     }
 
