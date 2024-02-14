@@ -246,4 +246,8 @@ mvnw
 mvnw.cmd
 .mvn
 
+### dotenv ###
+.env
+
+
 # End of https://www.toptal.com/developers/gitignore/api/java,maven,intellij,intellij+all
