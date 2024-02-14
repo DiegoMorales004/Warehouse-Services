@@ -1,0 +1,8 @@
+version: '3.0.7'
+services:
+  url-shortener-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
