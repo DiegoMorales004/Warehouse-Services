@@ -1,0 +1,291 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="1" author="DiegoChMs">
+        <createSequence sequenceName="SEQ_USERS"/>
+        <createSequence sequenceName="SEQ_ROLES"/>
+        <createSequence sequenceName="SEQ_SERVICES"/>
+        <createSequence sequenceName="SEQ_WAREHOUSES"/>
+        <createSequence sequenceName="SEQ_BRANCHES"/>
+
+        <createTable tableName="users">
+            <column type="INTEGER" name="id" defaultValue="NEXTVAL('SEQ_USERS')">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column type="VARCHAR" name="username">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column type="VARCHAR" name="email">
+                <constraints nullable="false"/>
+            </column>
+            <column type="VARCHAR" name="password">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="roles">
+            <column type="INTEGER" name="id" defaultValue="NEXTVAL('SEQ_ROLES')">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column type="VARCHAR" name="name">
+                <constraints nullable="false"/>
+            </column>
+            <column type="VARCHAR" name="description">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="services">
+            <column type="INTEGER" name="id" defaultValue="NEXTVAL('SEQ_SERVICES')">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column type="VARCHAR" name="name">
+                <constraints nullable="false"/>
+            </column>
+            <column type="VARCHAR" name="description">
+                <constraints nullable="false"/>
+            </column>
+            <column type="DECIMAL(10,2)" name="price">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="branches">
+            <column type="INTEGER" name="id" defaultValue="NEXTVAL('SEQ_BRANCHES')">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column type="VARCHAR" name="name">
+                <constraints nullable="false"/>
+            </column>
+            <column type="VARCHAR" name="code">
+                <constraints nullable="false"/>
+            </column>
+            <column type="VARCHAR" name="location">
+                <constraints nullable="false"/>
+            </column>
+            <column type="BOOLEAN" name="parking">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+        
+        <createTable tableName="warehouses">
+            <column type="INTEGER" name="id" defaultValue="NEXTVAL('SEQ_WAREHOUSES')">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column type="VARCHAR" name="code">
+                <constraints nullable="false"/>
+            </column>
+            <column type="VARCHAR" name="description">
+                <constraints nullable="false"/>
+            </column>
+            <column type="BOOLEAN" name="available" defaultValue="true">
+                <constraints nullable="false"/>
+            </column>
+            <column type="VARCHAR" name="size">
+                <constraints nullable="false"/>
+            </column>
+            <column type="DECIMAL(10,2)" name="price">
+                <constraints nullable="false"/>
+            </column>
+            <column type="INTEGER" name="id_branch">
+                <constraints nullable="false"/>
+            </column>
+            <column type="INTEGER" name="id_user"/>
+        </createTable>
+        <addForeignKeyConstraint
+                baseTableName="warehouses"
+                baseColumnNames="id_branch"
+                constraintName="fk_warehouses_branches"
+                referencedTableName="branches"
+                referencedColumnNames="id"
+        />
+        <addForeignKeyConstraint
+                baseTableName="warehouses"
+                baseColumnNames="id_user"
+                constraintName="fk_warehouses_users"
+                referencedTableName="users"
+                referencedColumnNames="id"
+        />
+
+<!--        Auxiliary tables-->
+<!--        Users Roles Many-To-Many-->
+        <createTable tableName="users_roles">
+            <column type="INTEGER" name="id_user">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column type="INTEGER" name="id_rol">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+                baseTableName="users_roles"
+                baseColumnNames="id_user"
+                constraintName="fk_usersRoles_users"
+                referencedTableName="users"
+                referencedColumnNames="id"
+        />
+        <addForeignKeyConstraint
+                baseTableName="users_roles"
+                baseColumnNames="id_rol"
+                constraintName="fk_usersRoles_roles"
+                referencedTableName="roles"
+                referencedColumnNames="id"
+        />
+
+<!--        Warehouses Services Many-to-Many-->
+        <createTable tableName="warehouses_services">
+            <column type="INTEGER" name="id_warehouse">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column type="INTEGER" name="id_service">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+                baseTableName="warehouses_services"
+                baseColumnNames="id_warehouse"
+                constraintName="fk_warehousesServices_warehouses"
+                referencedTableName="warehouses"
+                referencedColumnNames="id"
+        />
+        <addForeignKeyConstraint
+                baseTableName="warehouses_services"
+                baseColumnNames="id_service"
+                constraintName="fk_warehousesServices_services"
+                referencedTableName="services"
+                referencedColumnNames="id"
+        />
+    </changeSet>
+    <changeSet id="2" author="DiegoChMs">
+        <insert tableName="users">
+            <column name="username" value="ADMIN"/>
+            <column name="email" value="admin@gmail.com"/>
+            <column name="password" value="$2a$10$rNJl8iQlMYiMR4LomKmlQeTTBilQULC46tbQNd4f4L778MWw9s8km"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="name" value="ADMIN"/>
+            <column name="description" value="ADMIN role"/>
+        </insert>
+        <insert tableName="users_roles">
+            <column name="id_user" value="1"/>
+            <column name="id_rol" value="1"/>
+        </insert>
+    </changeSet>
+    <changeSet id="3" author="DiegoChMs">
+        <insert tableName="roles">
+            <column name="name" value="EMPLOYEE"/>
+            <column name="description" value="EMPLOYEE role"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="name" value="CLIENT"/>
+            <column name="description" value="CLIENT role"/>
+        </insert>
+    </changeSet>
+    <changeSet id="4" author="DiegoChMs">
+        <dropColumn tableName="warehouses" columnName="id_user"/>
+    </changeSet>
+
+    <changeSet id="5" author="DiegoChMsd">
+        <addColumn tableName="warehouses">
+            <column name="id_user" type="INTEGER"/>
+        </addColumn>
+
+        <addForeignKeyConstraint
+                baseTableName="warehouses"
+                baseColumnNames="id_user"
+                constraintName="fk_warehouses_users"
+                referencedTableName="users"
+                referencedColumnNames="id"
+        />
+
+    </changeSet>
+    
+<!--    Add table leases-->
+    <changeSet id="6" author="DiegoChMs">
+
+        <createSequence sequenceName="SEQ_LEASES"/>
+
+        <createTable tableName="leases">
+            <column name="id" type="INTEGER" defaultValue="NEXTVAL('SEQ_LEASES')">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="id_user" type="INTEGER"/>
+            <column name="id_warehouse" type="INTEGER"/>
+            <column name="total" type="DECIMAL(10,2)"/>
+
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="leases"
+                baseColumnNames="id_user"
+                constraintName="fk_leases_users"
+                referencedTableName="users"
+                referencedColumnNames="id"
+        />
+
+        <addForeignKeyConstraint
+                baseTableName="leases"
+                baseColumnNames="id_warehouse"
+                constraintName="fk_leases_warehouses"
+                referencedTableName="warehouses"
+                referencedColumnNames="id"
+        />
+
+        <createTable tableName="leases_services">
+            <column name="id_lease" type="INTEGER">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="id_service" type="INTEGER">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="leases_services"
+                baseColumnNames="id_lease"
+                constraintName="fk_leasesServices_leases"
+                referencedTableName="leases"
+                referencedColumnNames="id"
+        />
+
+        <addForeignKeyConstraint
+                baseTableName="leases_services"
+                baseColumnNames="id_service"
+                constraintName="fk_leasesServices_services"
+                referencedTableName="services"
+                referencedColumnNames="id"
+        />
+
+    </changeSet>
+
+    <changeSet id="deleteColumnIdUserFromWarehouses" author="DiegoChMs">
+        <dropColumn tableName="warehouses" columnName="id_user"/>
+    </changeSet>
+
+    <changeSet id="addColumnActiveToLeases" author="DiegoChMs">
+        <addColumn tableName="leases">
+            <column name="active" type="boolean"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="addColumnActiveToBranches" author="DiegoChMs">
+        <addColumn tableName="branches">
+            <column name="active" type="boolean"/>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet id="addColumnActiveTo" author="DiegoChMs">
+        <addColumn tableName="users">
+            <column name="active" type="Boolean"/>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet id="addBooleanToAdminDefault" author="DiegoChMs">
+        <update tableName="users">
+            <column name="active">true</column>
+            <where>id = 1</where>
+        </update>
+    </changeSet>
+
+</databaseChangeLog>
